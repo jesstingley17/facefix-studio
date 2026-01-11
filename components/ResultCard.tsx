@@ -25,13 +25,35 @@ export const ResultCard: React.FC<ResultCardProps> = ({ original, generated, isL
     );
   }
 
+  // If no generated image yet, just show the original
+  if (!generated) {
+    return (
+      <div className="relative aspect-[3/4] md:aspect-auto md:h-[600px] bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+        <img 
+          src={original} 
+          alt="Original" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute top-4 left-4 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-xs font-bold text-white border border-white/10 uppercase tracking-widest pointer-events-none">
+          Original
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="text-center px-8">
+            <i className="fas fa-magic text-indigo-400 text-4xl mb-4 opacity-50"></i>
+            <p className="text-slate-400 text-sm">Enter a prompt and click "Transform Now" to generate</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative aspect-[3/4] md:aspect-auto md:h-[600px] bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
       {/* Container for the comparison */}
       <div className="absolute inset-0 select-none">
         {/* Generated Image (Right) */}
         <img 
-          src={generated || "https://picsum.photos/1200/1600"} 
+          src={generated} 
           alt="Generated" 
           className="w-full h-full object-cover"
         />
