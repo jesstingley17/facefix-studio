@@ -97,13 +97,14 @@ export const onRequestPost: PagesFunction = async (context) => {
     }
     
     // Input parameters - both custom model and stability-ai/stable-diffusion-img2img use standard SD img2img params
+    // Optimized for realistic results with identity preservation
     const inputParams: any = {
       image: imageInput,
       prompt: prompt,
-      strength: 0.8,  // How much to transform (0.0-1.0) - higher = more transformation
-      guidance_scale: 10,  // Increased for better prompt adherence
-      num_inference_steps: 40,  // Increased for much better quality
-      negative_prompt: "blurry, low quality, distorted, watermark, text, bad anatomy, deformed, disfigured, poorly drawn, bad hands, bad proportions, extra limbs, ugly, poorly rendered face, bad composition, cloned face, gross proportions, malformed, mutated, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed",
+      strength: 0.45,  // 0.25-0.6 recommended to preserve likeness (lower = more identity preservation)
+      guidance_scale: 7.5,  // 6-9 optimal for prompt adherence without over-sharpening
+      num_inference_steps: 50,  // 30-60 typical, higher = cleaner details
+      negative_prompt: "cartoon, painterly, low resolution, watermark, text, extra fingers, distorted face, bad anatomy, deformed, disfigured, poorly drawn, bad hands, bad proportions, extra limbs, ugly, poorly rendered face, bad composition, cloned face, gross proportions, malformed, mutated, mutilated, out of frame, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry",
     };
     
     console.log(`Using ${useCustomModel ? 'custom' : 'stability-ai/stable-diffusion-img2img'} model: ${versionHash.substring(0, 8)}...`);
