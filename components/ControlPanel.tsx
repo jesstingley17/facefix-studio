@@ -55,7 +55,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Describe any transformation (optional)... e.g., 'Make me look like an ancient Egyptian pharaoh with golden skin'"
+          placeholder="Describe any transformation... e.g., 'Make me look like an ancient Egyptian pharaoh with golden skin'"
           className="w-full h-32 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none transition-all placeholder:text-slate-600"
         />
       </div>
@@ -63,7 +63,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       <div className="flex flex-col gap-3">
         <button
           onClick={onGenerate}
-          disabled={isLoading}
+          disabled={isLoading || !prompt.trim()}
           className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-3 active:scale-95"
         >
           {isLoading ? (

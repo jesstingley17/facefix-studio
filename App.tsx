@@ -24,12 +24,16 @@ const App: React.FC = () => {
 
   const handleGenerate = async () => {
     if (!originalImage) return;
+    if (!prompt || !prompt.trim()) {
+      setError('Please enter a prompt before generating.');
+      return;
+    }
 
     setStatus(AppStatus.GENERATING);
     setError(null);
 
     try {
-      const resultUrl = await editPhoto(originalImage, prompt || '');
+      const resultUrl = await editPhoto(originalImage, prompt);
       setGeneratedImage(resultUrl);
       
       const newRecord: GenerationResult = {
