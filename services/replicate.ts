@@ -61,8 +61,16 @@ export const editPhoto = async (
           throw new Error(`Failed to fetch generated image: ${imgResponse.status}`);
         }
         const blob = await imgResponse.blob();
-        const buffer = await blob.arrayBuffer();
-        const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        // Use FileReader instead of spread operator to avoid stack overflow with large images
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const result = reader.result as string;
+            resolve(result.split(',')[1] || result);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
         return `data:image/png;base64,${base64}`;
       }
       
@@ -87,8 +95,16 @@ export const editPhoto = async (
           throw new Error(`Failed to fetch generated image: ${imgResponse.status}`);
         }
         const blob = await imgResponse.blob();
-        const buffer = await blob.arrayBuffer();
-        const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        // Use FileReader instead of spread operator to avoid stack overflow with large images
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const result = reader.result as string;
+            resolve(result.split(',')[1] || result);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
         return `data:image/png;base64,${base64}`;
       }
       
