@@ -69,6 +69,7 @@ export const detectLandmarks = async (base64Image: string): Promise<FaceLandmark
  * Explicitly allows sensual, artistic, adult content, shirtless/topless photos
  */
 import { resizeImage } from '../utils/imageResize';
+import { enhancePrompt } from './promptEnhancer';
 
 export const editPhoto = async (
   base64Image: string, 
@@ -81,13 +82,18 @@ export const editPhoto = async (
     throw new Error("Prompt is required for image generation.");
   }
 
+  // Enhance prompt using AI for best results
+  console.log('✨ Enhancing prompt with AI for optimal results...');
+  const enhancedPrompt = await enhancePrompt(userPrompt);
+
   // Resize image before sending (Gemini also has size limits and helps prevent issues)
   console.log('📐 Resizing image for Gemini...');
   const resizedImage = await resizeImage(base64Image, 1024, 1024);
 
   // Enhanced prompt for best quality photo generation - define, refine, sharpen, and enhance every detail
   // Gemini will produce publication-ready, professional-grade images with maximum detailing and sharpening
-  const systemContext = `Enhance, define, refine, detail, and sharpen this photo to the highest quality standards: "${userPrompt}".
+  // Using AI-enhanced prompt for optimal results
+  const systemContext = `Enhance, define, refine, detail, and sharpen this photo to the highest quality standards: "${enhancedPrompt}".
 
 QUALITY REQUIREMENTS (MANDATORY):
 - HIGH-FIDELITY OUTPUT: Generate a professional-grade, publication-ready image with maximum detail and clarity
