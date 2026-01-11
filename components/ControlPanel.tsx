@@ -91,7 +91,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         <div className="flex items-start gap-3">
           <i className="fas fa-unlock-alt text-indigo-400 mt-0.5"></i>
           <p className="text-xs text-slate-400 leading-relaxed">
-            <span className="text-indigo-300 font-semibold">Unlimited Mode Enabled.</span> All identity preservation constraints have been removed. Gemini 2.5 Flash will prioritize your prompt above all else.
+            <span className="text-indigo-300 font-semibold">Unlimited Mode Enabled.</span> All restrictions removed - including identity preservation, content filters, and artistic limitations. All content types are permitted including sensual, artistic, and adult content.
           </p>
         </div>
       </div>
