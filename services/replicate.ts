@@ -105,13 +105,16 @@ export const editPhoto = async (
 /**
  * Poll Replicate API for prediction completion
  */
-async function pollReplicatePrediction(predictionId: string, maxAttempts = 60): Promise<string> {
+async function pollReplicatePrediction(predictionId: string, maxAttempts = 120): Promise<string> {
   const apiUrl = import.meta.env.PROD 
     ? `/api/predictions/${predictionId}`
     : `http://localhost:8788/api/predictions/${predictionId}`;
 
+  const pollInterval = 2000; // 2 seconds
+  const maxTime = (maxAttempts * pollInterval) / 1000; // Total time in seconds
+
   for (let i = 0; i < maxAttempts; i++) {
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds between polls
+    await new Promise(resolve => setTimeout(resolve, pollInterval)); // Wait 2 seconds between polls
 
     try {
       const response = await fetch(apiUrl);
@@ -121,32 +124,45 @@ async function pollReplicatePrediction(predictionId: string, maxAttempts = 60): 
       }
       
       const result = await response.json();
-      console.log(`Poll ${i + 1}/${maxAttempts}: status=${result.status}`);
+      
+      // Log progress every 10 polls (every 20 seconds)
+      if ((i + 1) % 10 === 0 || result.status === 'succeeded' || result.status === 'failed') {
+        console.log(`Poll ${i + 1}/${maxAttempts} (${Math.round((i + 1) * pollInterval / 1000)}s): status=${result.status}`);
+      }
       
       if (result.status === 'succeeded' && result.output) {
         const output = Array.isArray(result.output) ? result.output[0] : result.output;
         if (!output) {
           throw new Error("Prediction succeeded but no output image URL found");
         }
+        console.log(`✅ Prediction completed successfully after ${Math.round((i + 1) * pollInterval / 1000)} seconds`);
         return output;
       }
       
       if (result.status === 'failed' || result.status === 'canceled') {
         const errorMsg = result.error || result.logs?.join('\n') || 'Unknown error';
+        console.error(`❌ Prediction ${result.status}:`, errorMsg);
         throw new Error(`Prediction ${result.status}: ${errorMsg}`);
       }
       
       // Still processing, continue polling
+      // Show status if there are logs
+      if (result.logs && result.logs.length > 0 && (i + 1) % 5 === 0) {
+        const lastLog = result.logs[result.logs.length - 1];
+        console.log(`Processing... ${lastLog.substring(0, 100)}`);
+      }
     } catch (error: any) {
       // If it's the last attempt or a non-retryable error, throw it
       if (i === maxAttempts - 1 || (error.message && error.message.includes('failed'))) {
         throw error;
       }
       // Continue polling on transient errors
-      console.warn(`Poll attempt ${i + 1} error (will retry):`, error.message);
+      if ((i + 1) % 5 === 0) {
+        console.warn(`Poll attempt ${i + 1} error (will retry):`, error.message);
+      }
     }
   }
 
-  throw new Error("Prediction timed out after 120 seconds");
+  throw new Error(`Prediction timed out after ${maxTime} seconds (${maxAttempts} attempts). The model may be taking longer than expected or there may be an issue with the prediction.`);
 }
 

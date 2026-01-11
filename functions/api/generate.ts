@@ -111,6 +111,7 @@ export const onRequestPost: PagesFunction = async (context) => {
     
     console.log(`Using ${useCustomModel ? 'custom' : 'instruct-pix2pix'} model: ${versionHash.substring(0, 8)}...`);
     console.log(`Input params: prompt="${prompt.substring(0, 50)}...", strength=${inputParams.strength || 'N/A'}, image format=${imageInput.substring(0, 30)}...`);
+    console.log(`Model URL: ${useCustomModel ? `https://replicate.com/${customModel}` : 'https://replicate.com/timothybrooks/instruct-pix2pix'}`);
     
     // Call Replicate API to create prediction
     const response = await fetch("https://api.replicate.com/v1/predictions", {
