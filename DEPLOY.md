@@ -20,12 +20,13 @@ This guide will help you deploy FaceFix Studio to Cloudflare Pages.
    - Choose the `facefix-studio` repository
    - Click **Begin setup**
 
-3. **Configure Build Settings**
+3. **Configure Build Settings** (IMPORTANT!)
    - **Project name**: `facefix-studio` (or your preferred name)
    - **Production branch**: `main`
-   - **Build command**: `npm run build`
+   - **Build command**: `npm run build` (NOT `npx vitepress build` - make sure to override auto-detection)
    - **Build output directory**: `dist`
    - **Root directory**: `/` (leave as default)
+   - ⚠️ **Note**: Cloudflare may auto-detect this as VitePress. Make sure to manually set the build command to `npm run build`
 
 4. **Set Environment Variables**
    Click **Add variable** and add:
@@ -76,9 +77,21 @@ Required environment variable:
 
 ## Troubleshooting
 
+### Build Error: "vitepress build" or "Found dead link"
+**Problem**: Cloudflare is using `npx vitepress build` instead of `npm run build`
+
+**Solution**: 
+1. Go to your Pages project in Cloudflare Dashboard
+2. Navigate to **Settings** → **Builds & deployments**
+3. Click **Edit build settings**
+4. Change **Build command** from `npx vitepress build` to `npm run build`
+5. Save and trigger a new deployment
+
+### Other Issues
 - **Build fails**: Check that all dependencies are in `package.json`
 - **API key not working**: Verify the environment variable is set in Cloudflare Dashboard
 - **404 errors on routes**: The `_redirects` file should handle SPA routing automatically
+- **Old commit being built**: Make sure Cloudflare is set to use the `main` branch and trigger a new build
 
 ## Notes
 

@@ -20,6 +20,7 @@ View your app in AI Studio: https://ai.studio/apps/temp/1
 2. Set the `GEMINI_API_KEY` environment variable:
    - Create a `.env.local` file in the root directory
    - Add: `GEMINI_API_KEY=your_api_key_here`
+   - Note: This file is gitignored and won't be committed
 
 3. Run the app:
    ```bash
