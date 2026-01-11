@@ -8,22 +8,22 @@ import { editPhoto as geminiEditPhoto } from './gemini';
 import { editPhoto as replicateEditPhoto } from './replicate';
 
 /**
- * Edit photo with Gemini - enhanced for every generation
+ * Edit photo with Gemini - define, refine, and enhance every generation for best quality
  * Benefits:
- * - Gemini: Professional photo enhancement, better identity preservation, fast, synchronous
+ * - Gemini: Maximum quality output with detail refinement, professional enhancement, better identity preservation
  * - Replicate (babes-xl): Fallback only if Gemini fails/blocks content
  * 
- * Gemini enhances every photo generation with professional quality improvements
+ * Gemini defines, refines, and enhances every photo generation to the highest quality standards
  */
 export const editPhoto = async (
   base64Image: string,
   userPrompt: string
 ): Promise<string> => {
-  // Always try Gemini first - enhances every photo generation
+  // Always try Gemini first - defines, refines, and enhances every photo generation
   try {
-    console.log('🎨 Enhancing photo with Gemini AI (professional quality)...');
+    console.log('🎨 Enhancing photo with Gemini AI (defining, refining, and enhancing for best quality)...');
     const result = await geminiEditPhoto(base64Image, userPrompt);
-    console.log('✅ Gemini enhancement successful - professional quality image generated');
+    console.log('✅ Gemini enhancement successful - highest quality, refined image generated');
     return result;
   } catch (geminiError: any) {
     console.warn('⚠️ Gemini enhancement failed, falling back to Replicate (babes-xl):', geminiError.message);
