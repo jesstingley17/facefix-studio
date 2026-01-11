@@ -52,7 +52,7 @@ export const onRequestPost: PagesFunction = async (context) => {
           throw new Error(`Failed to fetch custom model: ${modelResponse.status}`);
         }
       } catch (err) {
-        console.error("Error fetching custom model, falling back to instruct-pix2pix:", err);
+        console.error("Error fetching custom model, falling back to stability-ai/stable-diffusion-img2img:", err);
         useCustomModel = false;
       }
     }
