@@ -96,13 +96,13 @@ export const onRequestPost: PagesFunction = async (context) => {
       imageInput = `data:image/png;base64,${imageInput}`;
     }
     
-    // Input parameters - optimized for camera-realistic results with identity preservation
-    // Based on research: lower strength (0.30-0.40) preserves likeness better
+    // Input parameters - optimized for identity preservation (prevent deformation)
+    // VERY LOW strength (0.20-0.30) to preserve person's likeness and prevent deformation
     const inputParams: any = {
       image: imageInput,
       prompt: prompt,
-      strength: 0.35,  // 0.30-0.40 optimal for balanced likeness + enhancement (lower = more identity preservation)
-      guidance_scale: 7.0,  // 6-8 optimal for natural look without over-sharpening
+      strength: 0.25,  // VERY LOW (0.20-0.30) to preserve identity and prevent deformation
+      guidance_scale: 7.5,  // Slightly higher (7-8) to follow prompt while preserving face
       num_inference_steps: 50,  // 30-60 typical, higher = cleaner details
       negative_prompt: "artificial, fake, CGI, 3D render, digital art, illustration, painting, drawing, cartoon, anime, plastic skin, airbrushed, over-processed, HDR, oversaturated, unnatural colors, perfect symmetry, uncanny valley, watermark, text, signature, logo, blurry, low quality, jpeg artifacts, extra fingers, deformed hands, bad anatomy, floating elements, disconnected limbs, AI generated, midjourney, stable diffusion, dall-e, stock photo watermark, shutterstock, hyper-realistic, ultra-detailed, 8K, masterpiece, perfect, flawless, beautiful, trending on artstation",
     };
