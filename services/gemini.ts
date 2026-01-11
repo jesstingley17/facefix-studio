@@ -3,8 +3,8 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { FaceLandmarks } from "../types";
 
 const getAIClient = () => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) throw new Error("API Key not found");
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("Gemini API Key not found. Please set GEMINI_API_KEY environment variable.");
   return new GoogleGenAI({ apiKey });
 };
 
