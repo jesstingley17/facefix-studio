@@ -91,7 +91,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         <div className="flex items-start gap-3">
           <i className="fas fa-unlock-alt text-indigo-400 mt-0.5"></i>
           <p className="text-xs text-slate-400 leading-relaxed">
-            <span className="text-indigo-300 font-semibold">Unlimited Mode Enabled.</span> All restrictions removed - including identity preservation, content filters, and artistic limitations. All content types are permitted including sensual, artistic, and adult content.
+            <span className="text-indigo-300 font-semibold">Unlimited Mode Enabled.</span> All restrictions removed - including identity preservation, content filters, and artistic limitations. All content types are permitted including shirtless, topless, sensual, artistic, and adult content.
           </p>
         </div>
       </div>

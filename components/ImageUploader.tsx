@@ -41,7 +41,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageSelected, d
       </div>
       <h3 className="text-xl font-semibold mb-2">Drop your photo here</h3>
       <p className="text-slate-400 text-center max-w-xs">
-        Select a clear portrait photo. We'll use AI to enhance it while keeping your face identical.
+        Select any photo you want to transform. All content types are accepted including shirtless/topless photos.
       </p>
       
       <div className="mt-8 flex flex-wrap justify-center gap-3">
