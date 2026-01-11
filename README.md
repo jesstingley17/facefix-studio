@@ -17,9 +17,10 @@ View your app in AI Studio: https://ai.studio/apps/temp/1
    npm install
    ```
 
-2. Set the `GEMINI_API_KEY` environment variable:
+2. Set the `REPLICATE_API_TOKEN` environment variable:
+   - Get your API token from [Replicate](https://replicate.com/account/api-tokens)
    - Create a `.env.local` file in the root directory
-   - Add: `GEMINI_API_KEY=your_api_key_here`
+   - Add: `REPLICATE_API_TOKEN=your_api_token_here`
    - Note: This file is gitignored and won't be committed
 
 3. Run the app:
@@ -35,5 +36,5 @@ Quick steps:
 1. Connect your GitHub repository to Cloudflare Pages
 2. Set build command: `npm run build`
 3. Set build output directory: `dist`
-4. Add environment variable: `GEMINI_API_KEY` (your Gemini API key)
+4. Add environment variable: `REPLICATE_API_TOKEN` (your Replicate API token)
 5. Deploy!

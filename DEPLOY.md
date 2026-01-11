@@ -5,7 +5,7 @@ This guide will help you deploy FaceFix Studio to Cloudflare Pages.
 ## Prerequisites
 
 1. A Cloudflare account
-2. Your Gemini API key (from Google AI Studio)
+2. Your Replicate API token (from [Replicate Account](https://replicate.com/account/api-tokens))
 
 ## Deployment Steps
 
@@ -30,8 +30,8 @@ This guide will help you deploy FaceFix Studio to Cloudflare Pages.
 
 4. **Set Environment Variables**
    Click **Add variable** and add:
-   - **Variable name**: `GEMINI_API_KEY`
-   - **Value**: Your Gemini API key from Google AI Studio
+   - **Variable name**: `REPLICATE_API_TOKEN`
+   - **Value**: Your Replicate API token from [Replicate Account](https://replicate.com/account/api-tokens)
    - Make sure to add it to both **Production** and **Preview** environments
 
 5. **Deploy**
@@ -60,12 +60,12 @@ This guide will help you deploy FaceFix Studio to Cloudflare Pages.
 4. **Set Environment Variables via Dashboard**
    - Go to your Pages project in Cloudflare Dashboard
    - Navigate to **Settings** → **Environment Variables**
-   - Add `GEMINI_API_KEY` with your API key
+   - Add `REPLICATE_API_TOKEN` with your API token
 
 ## Environment Variables
 
 Required environment variable:
-- `GEMINI_API_KEY`: Your Google Gemini API key
+- `REPLICATE_API_TOKEN`: Your Replicate API token
 
 **Important**: Make sure to set this in both Production and Preview environments in Cloudflare Pages settings.
 
@@ -89,7 +89,7 @@ Required environment variable:
 
 ### Other Issues
 - **Build fails**: Check that all dependencies are in `package.json`
-- **API key not working**: Verify the environment variable is set in Cloudflare Dashboard
+- **API token not working**: Verify the REPLICATE_API_TOKEN environment variable is set in Cloudflare Dashboard
 - **404 errors on routes**: The `_redirects` file should handle SPA routing automatically
 - **Old commit being built**: Make sure Cloudflare is set to use the `main` branch and trigger a new build
 

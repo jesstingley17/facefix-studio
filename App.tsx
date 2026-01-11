@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { AppStatus, GenerationResult } from './types';
-import { editPhoto } from './services/gemini';
+import { editPhoto } from './services/replicate';
 import { Header } from './components/Header';
 import { ImageUploader } from './components/ImageUploader';
 import { ControlPanel } from './components/ControlPanel';

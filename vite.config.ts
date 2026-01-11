@@ -4,8 +4,10 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
-    // Support both GEMINI_API_KEY and VITE_GEMINI_API_KEY for Cloudflare Pages
-    const apiKey = env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY || '';
+    // Support both REPLICATE_API_TOKEN and VITE_REPLICATE_API_TOKEN for Cloudflare Pages
+    // Also keep GEMINI_API_KEY for backward compatibility
+    const replicateToken = env.REPLICATE_API_TOKEN || env.VITE_REPLICATE_API_TOKEN || env.API_KEY || '';
+    const geminiKey = env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY || '';
     return {
       server: {
         port: 3000,
@@ -13,8 +15,9 @@ export default defineConfig(({ mode }) => {
       },
       plugins: [react()],
       define: {
-        'process.env.API_KEY': JSON.stringify(apiKey),
-        'process.env.GEMINI_API_KEY': JSON.stringify(apiKey)
+        'process.env.API_KEY': JSON.stringify(replicateToken),
+        'process.env.REPLICATE_API_TOKEN': JSON.stringify(replicateToken),
+        'process.env.GEMINI_API_KEY': JSON.stringify(geminiKey)
       },
       resolve: {
         alias: {
