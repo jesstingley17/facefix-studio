@@ -105,7 +105,7 @@ export const editPhoto = async (
 /**
  * Poll Replicate API for prediction completion
  */
-async function pollReplicatePrediction(predictionId: string, maxAttempts = 120): Promise<string> {
+async function pollReplicatePrediction(predictionId: string, maxAttempts = 60): Promise<string> {
   const apiUrl = import.meta.env.PROD 
     ? `/api/predictions/${predictionId}`
     : `http://localhost:8788/api/predictions/${predictionId}`;
@@ -114,7 +114,10 @@ async function pollReplicatePrediction(predictionId: string, maxAttempts = 120):
   const maxTime = (maxAttempts * pollInterval) / 1000; // Total time in seconds
 
   for (let i = 0; i < maxAttempts; i++) {
-    await new Promise(resolve => setTimeout(resolve, pollInterval)); // Wait 2 seconds between polls
+    // Use setTimeout to avoid blocking, prevent stack overflow
+    await new Promise<void>(resolve => {
+      setTimeout(() => resolve(), pollInterval);
+    }); // Wait 2 seconds between polls
 
     try {
       const response = await fetch(apiUrl);
