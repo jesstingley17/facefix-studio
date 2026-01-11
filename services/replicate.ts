@@ -1,105 +1,122 @@
-
-import Replicate from "replicate";
-
-const getReplicateClient = () => {
-  const apiKey = process.env.REPLICATE_API_TOKEN || process.env.API_KEY;
-  if (!apiKey) throw new Error("Replicate API token not found. Set REPLICATE_API_TOKEN environment variable.");
-  return new Replicate({ auth: apiKey });
-};
-
 /**
  * Edit photo with Replicate API - supports image-to-image generation
  * Uses Stable Diffusion models that allow adult content
  * Face mapping disabled - direct image transformation
+ * 
+ * Note: API calls are proxied through Cloudflare Functions to keep API token secure
  */
 export const editPhoto = async (
   base64Image: string, 
   userPrompt: string
 ): Promise<string> => {
-  const replicate = getReplicateClient();
-
   // Require a prompt - no automatic generation without user input
   if (!userPrompt || !userPrompt.trim()) {
     throw new Error("Prompt is required for image generation.");
   }
 
   try {
-    // Convert base64 to format Replicate can use
-    // Replicate accepts base64 data URLs directly
+    // Convert base64 to format we can send
     let imageDataUrl = base64Image;
     if (!base64Image.startsWith('data:')) {
       const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
       imageDataUrl = `data:image/png;base64,${base64Data}`;
     }
 
-    // Use instruct-pix2pix for image-to-image editing with prompts
-    // This model explicitly supports image transformation based on text prompts
-    // It allows adult content and works well with uploaded photos
-    const output = await replicate.run(
-      "timothybrooks/instruct-pix2pix:30a09a59c1f5d38f77c2b80a5eac5f30c40f1b0",
-      {
-        input: {
-          image: imageDataUrl,
-          prompt: userPrompt,
-          num_outputs: 1,
-          image_guidance_scale: 1.5,
-          guidance_scale: 7.5,
-          num_inference_steps: 20,
-        }
-      }
-    );
+    // Call our Cloudflare Function API endpoint
+    // In production, this will be /api/generate (Cloudflare Functions)
+    // For local dev, you'll need to set up a local proxy or use the Replicate API directly
+    const apiUrl = import.meta.env.PROD 
+      ? '/api/generate'  // Production: Cloudflare Function
+      : 'http://localhost:8788/api/generate';  // Local dev: if running wrangler pages dev
 
-    // Replicate returns an array of URLs or base64 data
-    let imageUrl = '';
-    
-    if (Array.isArray(output)) {
-      imageUrl = output[0] as string;
-    } else if (typeof output === 'string') {
-      imageUrl = output;
-    } else if (output && typeof output === 'object' && 'image' in output) {
-      imageUrl = (output as any).image;
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        image: imageDataUrl,
+        prompt: userPrompt,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || `API request failed: ${response.status}`);
     }
 
-    if (!imageUrl) {
-      console.error("Replicate output structure:", JSON.stringify(output, null, 2));
-      throw new Error("Image generation failed. Replicate did not return an image URL.");
-    }
+    const result = await response.json();
 
-    // If it's a URL, fetch and convert to base64 data URL
-    if (imageUrl.startsWith('http')) {
-      try {
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
+    // If we got a prediction ID, poll for completion
+    if (result.id && (result.status === 'starting' || result.status === 'processing')) {
+      const imageUrl = await pollReplicatePrediction(result.id);
+      
+      // Fetch and convert to base64 data URL
+      if (imageUrl.startsWith('http')) {
+        const imgResponse = await fetch(imageUrl);
+        const blob = await imgResponse.blob();
         const buffer = await blob.arrayBuffer();
-        const base64 = Buffer.from(buffer).toString('base64');
+        const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
         return `data:image/png;base64,${base64}`;
-      } catch (err) {
-        console.error("Error fetching image from Replicate:", err);
-        throw new Error("Failed to fetch generated image from Replicate.");
       }
-    }
-
-    // If it's already a base64 data URL, return as-is
-    if (imageUrl.startsWith('data:')) {
+      
       return imageUrl;
     }
 
-    // Otherwise, assume it's base64 and wrap it
-    return `data:image/png;base64,${imageUrl}`;
+    // If we already have output URLs
+    if (result.output) {
+      const imageUrl = Array.isArray(result.output) ? result.output[0] : result.output;
+      
+      if (imageUrl.startsWith('http')) {
+        const imgResponse = await fetch(imageUrl);
+        const blob = await imgResponse.blob();
+        const buffer = await blob.arrayBuffer();
+        const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        return `data:image/png;base64,${base64}`;
+      }
+      
+      return imageUrl.startsWith('data:') ? imageUrl : `data:image/png;base64,${imageUrl}`;
+    }
+
+    throw new Error("Unexpected response format from API");
   } catch (error: any) {
     console.error("Replicate Image Editing Error:", error);
-    
-    // Handle Replicate-specific errors
-    if (error.message) {
-      if (error.message.includes("content policy") || error.message.includes("safety")) {
-        throw new Error("Content blocked by Replicate's content policy. Try a different prompt or image.");
-      }
-      if (error.message.includes("API token")) {
-        throw new Error("Invalid Replicate API token. Please check your REPLICATE_API_TOKEN environment variable.");
-      }
-    }
-    
-    throw new Error(error.message || "An unexpected error occurred during image generation with Replicate.");
+    throw new Error(error.message || "An unexpected error occurred during image generation.");
   }
 };
+
+/**
+ * Poll Replicate API for prediction completion
+ */
+async function pollReplicatePrediction(predictionId: string, maxAttempts = 60): Promise<string> {
+  const apiUrl = import.meta.env.PROD 
+    ? `/api/predictions/${predictionId}`
+    : `http://localhost:8788/api/predictions/${predictionId}`;
+
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) throw new Error(`Failed to fetch prediction: ${response.status}`);
+      
+      const result = await response.json();
+      
+      if (result.status === 'succeeded' && result.output) {
+        return Array.isArray(result.output) ? result.output[0] : result.output;
+      }
+      
+      if (result.status === 'failed' || result.status === 'canceled') {
+        throw new Error(`Prediction ${result.status}: ${result.error || 'Unknown error'}`);
+      }
+      
+      // Still processing, continue polling
+    } catch (error: any) {
+      if (i === maxAttempts - 1) throw error;
+      // Continue polling on transient errors
+    }
+  }
+
+  throw new Error("Prediction timed out after 60 seconds");
+}
 
