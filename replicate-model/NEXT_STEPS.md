@@ -2,21 +2,34 @@
 
 ## ✅ Cog is Installed (v0.16.9)
 
-## ⚠️ Next: Start Docker Desktop
+## ⚠️ Next: Install Docker Desktop
 
-1. **Open Docker Desktop** on your Mac
-   - Look for Docker in Applications folder
-   - Or search "Docker" in Spotlight
+**Docker is required** to build your model before pushing to Replicate.
 
-2. **Wait for Docker to start**
-   - Look for the whale icon 🐋 in your menu bar
-   - Wait until it shows "Docker Desktop is running"
+### Quick Install:
 
-3. **Verify Docker is running:**
+1. **Download Docker Desktop:**
+   - Go to: https://www.docker.com/products/docker-desktop/
+   - Click "Download for Mac"
+   - Choose the right version for your Mac (Intel or Apple Silicon)
+
+2. **Install:**
+   - Open the downloaded `.dmg` file
+   - Drag Docker to Applications folder
+   - Open Docker from Applications
+
+3. **Start Docker:**
+   - Open Docker Desktop app
+   - Wait for it to start (whale icon 🐋 appears in menu bar)
+   - First launch takes a few minutes
+
+4. **Verify Docker is running:**
    ```bash
    docker info
    ```
    Should show Docker information (not an error)
+
+See `INSTALL_DOCKER.md` for detailed instructions.
 
 ## Then Run These Commands:
 
