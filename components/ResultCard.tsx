@@ -8,8 +8,10 @@ interface ResultCardProps {
   isLoading: boolean;
 }
 
+type ViewMode = 'generated' | 'original' | 'side-by-side';
+
 export const ResultCard: React.FC<ResultCardProps> = ({ original, generated, isLoading }) => {
-  const [sliderPos, setSliderPos] = useState(50);
+  const [viewMode, setViewMode] = useState<ViewMode>('generated');
 
   if (isLoading) {
     return (
@@ -48,66 +50,132 @@ export const ResultCard: React.FC<ResultCardProps> = ({ original, generated, isL
     );
   }
 
-  return (
-    <div className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-auto md:h-[600px] bg-slate-950 rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
-      {/* Container for the comparison */}
-      <div className="absolute inset-0 select-none">
-        {/* Generated Image (Right) */}
-        <img 
-          src={generated} 
-          alt="Generated" 
-          className="w-full h-full object-cover"
-        />
-        
-        {/* Original Image (Left, Clipped) */}
-        <div 
-          className="absolute inset-y-0 left-0 overflow-hidden" 
-          style={{ width: `${sliderPos}%` }}
-        >
-          <img 
-            src={original} 
-            alt="Original" 
-            className="w-full h-full object-cover h-[600px]"
-            style={{ width: `calc(100% * 100 / ${sliderPos})` }}
-          />
-        </div>
+  // View mode selector buttons
+  const viewButtons = (
+    <div className="absolute top-3 left-3 sm:top-4 sm:left-4 flex gap-2 z-20">
+      <button
+        onClick={() => setViewMode('generated')}
+        className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all backdrop-blur-md border touch-manipulation ${
+          viewMode === 'generated'
+            ? 'bg-indigo-600/90 text-white border-indigo-500/50 shadow-lg'
+            : 'bg-black/40 text-white/70 border-white/20 hover:bg-black/60'
+        }`}
+      >
+        <i className="fas fa-magic mr-1.5"></i>
+        Enhanced
+      </button>
+      <button
+        onClick={() => setViewMode('side-by-side')}
+        className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all backdrop-blur-md border touch-manipulation ${
+          viewMode === 'side-by-side'
+            ? 'bg-indigo-600/90 text-white border-indigo-500/50 shadow-lg'
+            : 'bg-black/40 text-white/70 border-white/20 hover:bg-black/60'
+        }`}
+      >
+        <i className="fas fa-columns mr-1.5"></i>
+        Compare
+      </button>
+      <button
+        onClick={() => setViewMode('original')}
+        className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all backdrop-blur-md border touch-manipulation ${
+          viewMode === 'original'
+            ? 'bg-black/60 text-white border-white/30 shadow-lg'
+            : 'bg-black/40 text-white/70 border-white/20 hover:bg-black/60'
+        }`}
+      >
+        <i className="fas fa-image mr-1.5"></i>
+        Original
+      </button>
+    </div>
+  );
 
-        {/* Slider Handle */}
-        <div 
-          className="absolute inset-y-0 w-1 bg-white cursor-ew-resize group"
-          style={{ left: `calc(${sliderPos}% - 0.5px)` }}
-        >
-          <input 
-            type="range"
-            min="0"
-            max="100"
-            value={sliderPos}
-            onChange={(e) => setSliderPos(Number(e.target.value))}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize"
-          />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-            <i className="fas fa-arrows-alt-h text-slate-900 text-lg"></i>
+  // Side-by-side view
+  if (viewMode === 'side-by-side') {
+    return (
+      <div className="relative bg-slate-950 rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+        {viewButtons}
+        
+        <div className="grid grid-cols-2 gap-0">
+          {/* Original */}
+          <div className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-auto md:h-[600px]">
+            <img 
+              src={original} 
+              alt="Original" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 px-2 sm:px-3 py-1 bg-black/60 backdrop-blur-md rounded-full text-xs font-bold text-white border border-white/20 uppercase tracking-widest">
+              Original
+            </div>
+          </div>
+          
+          {/* Generated */}
+          <div className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-auto md:h-[600px] border-l border-slate-700">
+            <img 
+              src={generated} 
+              alt="Generated" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 px-2 sm:px-3 py-1 bg-indigo-600/80 backdrop-blur-md rounded-full text-xs font-bold text-white border border-indigo-500/20 uppercase tracking-widest">
+              Enhanced
+            </div>
           </div>
         </div>
+
+        {/* Save Button */}
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20">
+          <button
+            onClick={async () => {
+              try {
+                await saveImageToGallery(generated, 'enhanced-photo.png');
+              } catch (error: any) {
+                console.error('Failed to save image:', error);
+                const link = document.createElement('a');
+                link.href = generated;
+                link.download = 'enhanced-photo.png';
+                link.click();
+              }
+            }}
+            className="px-4 sm:px-6 py-2 bg-white text-slate-900 font-bold text-sm sm:text-base rounded-full shadow-lg hover:bg-slate-100 active:bg-slate-200 transition-all flex items-center gap-2 touch-manipulation min-h-[44px]"
+          >
+            <i className="fas fa-save"></i>
+            <span>Save to Gallery</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Single image view (generated or original)
+  const displayImage = viewMode === 'generated' ? generated : original;
+  const isEnhanced = viewMode === 'generated';
+
+  return (
+    <div className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-auto md:h-[600px] bg-slate-950 rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+      {viewButtons}
+      
+      <img 
+        src={displayImage} 
+        alt={isEnhanced ? "Enhanced" : "Original"} 
+        className="w-full h-full object-cover"
+      />
+
+      {/* Label */}
+      <div className={`absolute top-3 right-3 sm:top-4 sm:right-4 px-2 sm:px-3 py-1 backdrop-blur-md rounded-full text-xs font-bold text-white border uppercase tracking-widest pointer-events-none ${
+        isEnhanced 
+          ? 'bg-indigo-600/80 border-indigo-500/20' 
+          : 'bg-black/60 border-white/20'
+      }`}>
+        {isEnhanced ? 'Enhanced' : 'Original'}
       </div>
 
-      {/* Labels */}
-      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 px-2 sm:px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-xs font-bold text-white border border-white/10 uppercase tracking-widest pointer-events-none">
-        Original
-      </div>
-      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 px-2 sm:px-3 py-1 bg-indigo-600/80 backdrop-blur-md rounded-full text-xs font-bold text-white border border-indigo-500/20 uppercase tracking-widest pointer-events-none">
-        Enhanced
-      </div>
-
-      {/* Bottom Actions */}
-      <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 sm:gap-4">
+      {/* Save Button */}
+      <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-10">
         <button
           onClick={async () => {
             try {
               await saveImageToGallery(generated, 'enhanced-photo.png');
             } catch (error: any) {
               console.error('Failed to save image:', error);
-              // Fallback: try direct download link
               const link = document.createElement('a');
               link.href = generated;
               link.download = 'enhanced-photo.png';
