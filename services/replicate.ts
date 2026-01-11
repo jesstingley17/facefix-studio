@@ -5,6 +5,8 @@
  * 
  * Note: API calls are proxied through Cloudflare Functions to keep API token secure
  */
+import { resizeImage } from '../utils/imageResize';
+
 export const editPhoto = async (
   base64Image: string, 
   userPrompt: string
@@ -15,8 +17,13 @@ export const editPhoto = async (
   }
 
   try {
+    // Resize image to prevent CUDA out of memory errors
+    // babes-xl works best with images <= 1024x1024
+    console.log('📐 Resizing image to prevent CUDA OOM errors...');
+    const resizedImage = await resizeImage(base64Image, 1024, 1024);
+    
     // Convert base64 to format we can send
-    let imageDataUrl = base64Image;
+    let imageDataUrl = resizedImage;
     if (!base64Image.startsWith('data:')) {
       const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
       imageDataUrl = `data:image/png;base64,${base64Data}`;
