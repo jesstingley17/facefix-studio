@@ -20,15 +20,9 @@ echo ""
 echo "📋 Model will be deployed as: jesstingley17/facefix-studio"
 echo ""
 
-# Check if logged in
+# Check if logged in (try to run a simple command)
 echo "Checking Replicate authentication..."
-if ! cog whoami &> /dev/null; then
-    echo "⚠️  Not logged in to Replicate. Please log in now..."
-    cog login
-else
-    echo "✅ Already logged in to Replicate"
-    cog whoami
-fi
+echo "⚠️  If you haven't logged in yet, you'll be prompted to login..."
 
 echo ""
 echo "🔨 Building and pushing model to Replicate..."
