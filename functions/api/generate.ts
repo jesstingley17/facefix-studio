@@ -96,15 +96,15 @@ export const onRequestPost: PagesFunction = async (context) => {
       imageInput = `data:image/png;base64,${imageInput}`;
     }
     
-    // Input parameters - both custom model and stability-ai/stable-diffusion-img2img use standard SD img2img params
-    // Optimized for realistic results with identity preservation
+    // Input parameters - optimized for camera-realistic results with identity preservation
+    // Based on research: lower strength (0.30-0.40) preserves likeness better
     const inputParams: any = {
       image: imageInput,
       prompt: prompt,
-      strength: 0.45,  // 0.25-0.6 recommended to preserve likeness (lower = more identity preservation)
-      guidance_scale: 7.5,  // 6-9 optimal for prompt adherence without over-sharpening
+      strength: 0.35,  // 0.30-0.40 optimal for balanced likeness + enhancement (lower = more identity preservation)
+      guidance_scale: 7.0,  // 6-8 optimal for natural look without over-sharpening
       num_inference_steps: 50,  // 30-60 typical, higher = cleaner details
-      negative_prompt: "cartoon, painterly, low resolution, watermark, text, extra fingers, distorted face, bad anatomy, deformed, disfigured, poorly drawn, bad hands, bad proportions, extra limbs, ugly, poorly rendered face, bad composition, cloned face, gross proportions, malformed, mutated, mutilated, out of frame, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry",
+      negative_prompt: "artificial, fake, CGI, 3D render, digital art, illustration, painting, drawing, cartoon, anime, plastic skin, airbrushed, over-processed, HDR, oversaturated, unnatural colors, perfect symmetry, uncanny valley, watermark, text, signature, logo, blurry, low quality, jpeg artifacts, extra fingers, deformed hands, bad anatomy, floating elements, disconnected limbs, AI generated, midjourney, stable diffusion, dall-e, stock photo watermark, shutterstock, hyper-realistic, ultra-detailed, 8K, masterpiece, perfect, flawless, beautiful, trending on artstation",
     };
     
     console.log(`Using ${useCustomModel ? 'custom' : 'stability-ai/stable-diffusion-img2img'} model: ${versionHash.substring(0, 8)}...`);

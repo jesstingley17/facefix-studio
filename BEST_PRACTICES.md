@@ -1,20 +1,23 @@
-# Best Practices for Realistic Image Generation
+# Best Practices for Camera-Realistic Image Generation
 
-Based on research and testing with `stability-ai/stable-diffusion-img2img`, here are the optimal settings for realistic results.
+Based on research and testing with `stability-ai/stable-diffusion-img2img`, here are the optimal settings for making AI images look camera-real (not AI-generated).
 
 ## Key Parameters
 
-### Strength (Denoising)
-- **Range**: 0.25-0.6
-- **Current**: 0.45
-- **Lower (0.25-0.4)**: Best for preserving identity and likeness
-- **Higher (0.4-0.6)**: Allows more stylization while still maintaining resemblance
+### Strength (Denoising) - MOST IMPORTANT
+- **Range**: 0.25-0.55
+- **Current**: 0.35 (optimal for camera-realistic results)
+- **Maximum Likeness (0.20-0.30)**: Very close to reference, minimal change
+- **Balanced (0.30-0.40)**: Good likeness + enhancement (RECOMMENDED)
+- **More Stylization (0.40-0.55)**: Noticeable changes, still recognizable
+- **Heavy Transformation (0.55+)**: Major changes, may lose likeness
 - **Too High (>0.6)**: Loses identity, becomes more like text-to-image
 
 ### Guidance Scale
-- **Range**: 6-9
-- **Current**: 7.5
-- **Lower (6-7)**: Looser adherence to prompt, more natural
+- **Range**: 6-8
+- **Current**: 7.0 (optimal for natural look)
+- **Lower (6-7)**: Looser adherence to prompt, more natural variation
+- **Balanced (7-8)**: Balanced adherence (RECOMMENDED)
 - **Higher (8-9)**: Stricter adherence, but can over-sharpen
 - **Too High (>9)**: Can create artifacts and unnatural sharpness
 
