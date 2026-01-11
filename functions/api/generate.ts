@@ -58,9 +58,9 @@ export const onRequestPost: PagesFunction = async (context) => {
     }
     
     if (!useCustomModel) {
-      // Use stability-ai/stable-diffusion-img2img as default instead of instruct-pix2pix
+      // Use asiryan/babes-xl as default (supports Img2Img, Text2Img, Inpainting)
       try {
-        const modelResponse = await fetch("https://api.replicate.com/v1/models/stability-ai/stable-diffusion-img2img", {
+        const modelResponse = await fetch("https://api.replicate.com/v1/models/asiryan/babes-xl", {
           headers: {
             "Authorization": `Token ${replicateToken}`,
             "Content-Type": "application/json",
@@ -72,15 +72,15 @@ export const onRequestPost: PagesFunction = async (context) => {
           if (modelInfo.latest_version) {
             versionHash = modelInfo.latest_version.id;
           } else {
-            // Fallback version hash for stability-ai/stable-diffusion-img2img
-            versionHash = "15a3689ee13b0d2616e98820eca31d4c3abcd36672df6afce5cb6feb1d66087d";
+            // Fallback version hash for asiryan/babes-xl
+            versionHash = "a07fcbe80652ccf989e8198654740d7d562de85f573196dd624a8a80285da27d";
           }
         } else {
-          versionHash = "15a3689ee13b0d2616e98820eca31d4c3abcd36672df6afce5cb6feb1d66087d";
+          versionHash = "a07fcbe80652ccf989e8198654740d7d562de85f573196dd624a8a80285da27d";
         }
       } catch (err) {
         console.error("Error fetching model version, using fallback:", err);
-        versionHash = "15a3689ee13b0d2616e98820eca31d4c3abcd36672df6afce5cb6feb1d66087d";
+        versionHash = "a07fcbe80652ccf989e8198654740d7d562de85f573196dd624a8a80285da27d";
       }
     }
 
@@ -110,9 +110,9 @@ export const onRequestPost: PagesFunction = async (context) => {
       negative_prompt: "deformed, disfigured, distorted, mutilated, malformed, misshapen, warped, twisted, contorted, mangled, ruined, broken, damaged, corrupted, aged, aging, wrinkles, old, elderly, age progression, age regression, older, aged face, wrinkles, fine lines, sagging skin, age spots, gray hair, white hair, balding, receding hairline, mature, senior, middle-aged, artificial, fake, CGI, 3D render, digital art, illustration, painting, drawing, cartoon, anime, plastic skin, airbrushed, over-processed, HDR, oversaturated, unnatural colors, perfect symmetry, uncanny valley, watermark, text, signature, logo, blurry, low quality, jpeg artifacts, extra fingers, deformed hands, bad anatomy, floating elements, disconnected limbs, AI generated, midjourney, stable diffusion, dall-e, stock photo watermark, shutterstock, hyper-realistic, ultra-detailed, 8K, masterpiece, perfect, flawless, beautiful, trending on artstation",
     };
     
-    console.log(`Using ${useCustomModel ? 'custom' : 'stability-ai/stable-diffusion-img2img'} model: ${versionHash.substring(0, 8)}...`);
+    console.log(`Using ${useCustomModel ? 'custom' : 'asiryan/babes-xl'} model: ${versionHash.substring(0, 8)}...`);
     console.log(`Input params: prompt="${prompt.substring(0, 50)}...", strength=${inputParams.strength || 'N/A'}, image format=${imageInput.substring(0, 30)}...`);
-    console.log(`Model URL: ${useCustomModel ? `https://replicate.com/${customModel}` : 'https://replicate.com/stability-ai/stable-diffusion-img2img'}`);
+    console.log(`Model URL: ${useCustomModel ? `https://replicate.com/${customModel}` : 'https://replicate.com/asiryan/babes-xl'}`);
     
     // Call Replicate API to create prediction
     const response = await fetch("https://api.replicate.com/v1/predictions", {
