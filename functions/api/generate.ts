@@ -24,27 +24,61 @@ export const onRequestPost: PagesFunction = async (context) => {
       );
     }
 
-    // Get the latest version of instruct-pix2pix model
-    // Replicate API requires a specific version hash, not just model name
-    let versionHash = "30a09a59c1f5d38f77c2b80a5eac5f30c40f1b0"; // Fallback version
+    // Use custom model if specified, otherwise try to get latest version
+    // Set your custom model in environment variable: CUSTOM_MODEL=your-username/facefix-studio
+    let customModel = env.CUSTOM_MODEL as string | undefined;
+    let versionHash: string;
+    let useCustomModel = false;
     
-    try {
-      const modelResponse = await fetch("https://api.replicate.com/v1/models/timothybrooks/instruct-pix2pix", {
-        headers: {
-          "Authorization": `Token ${replicateToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-      
-      if (modelResponse.ok) {
-        const modelInfo = await modelResponse.json();
-        if (modelInfo.latest_version) {
-          versionHash = modelInfo.latest_version.id;
+    if (customModel) {
+      // Use custom model - get latest version
+      try {
+        const modelResponse = await fetch(`https://api.replicate.com/v1/models/${customModel}`, {
+          headers: {
+            "Authorization": `Token ${replicateToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        
+        if (modelResponse.ok) {
+          const modelInfo = await modelResponse.json();
+          if (modelInfo.latest_version) {
+            versionHash = modelInfo.latest_version.id;
+            useCustomModel = true;
+          } else {
+            throw new Error("Custom model not found or has no versions");
+          }
+        } else {
+          throw new Error(`Failed to fetch custom model: ${modelResponse.status}`);
         }
+      } catch (err) {
+        console.error("Error fetching custom model, falling back to instruct-pix2pix:", err);
+        useCustomModel = false;
       }
-    } catch (err) {
-      console.error("Error fetching model version, using fallback:", err);
-      // Continue with fallback version
+    }
+    
+    if (!useCustomModel) {
+      // Fallback: Get the latest version of instruct-pix2pix model
+      versionHash = "30a09a59c1f5d38f77c2b80a5eac5f30c40f1b0"; // Fallback version
+      
+      try {
+        const modelResponse = await fetch("https://api.replicate.com/v1/models/timothybrooks/instruct-pix2pix", {
+          headers: {
+            "Authorization": `Token ${replicateToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        
+        if (modelResponse.ok) {
+          const modelInfo = await modelResponse.json();
+          if (modelInfo.latest_version) {
+            versionHash = modelInfo.latest_version.id;
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching model version, using fallback:", err);
+        // Continue with fallback version
+      }
     }
 
     // Call Replicate API to create prediction
@@ -54,16 +88,25 @@ export const onRequestPost: PagesFunction = async (context) => {
         "Authorization": `Token ${replicateToken}`,
         "Content-Type": "application/json",
       },
+      // Input parameters - custom model uses standard SD img2img params
+      const inputParams: any = {
+        image: image,
+        prompt: prompt,
+        strength: 0.75,  // How much to transform (0.0-1.0)
+        guidance_scale: 7.5,
+        num_inference_steps: 20,
+        negative_prompt: "blurry, low quality, distorted, watermark, text",
+      };
+      
+      // For instruct-pix2pix, use different parameter name
+      if (!useCustomModel) {
+        inputParams.image_guidance_scale = 1.5;
+        delete inputParams.strength; // instruct-pix2pix doesn't use strength
+      }
+      
       body: JSON.stringify({
         version: versionHash,
-        input: {
-          image: image,
-          prompt: prompt,
-          num_outputs: 1,
-          image_guidance_scale: 1.5,
-          guidance_scale: 7.5,
-          num_inference_steps: 20,
-        },
+        input: inputParams,
       }),
     });
 

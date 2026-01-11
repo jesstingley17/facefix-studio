@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Replicate model
+replicate-model/.cog
+replicate-model/__pycache__
+replicate-model/*.png
+replicate-model/*.jpg
+replicate-model/*.jpeg
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
