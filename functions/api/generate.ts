@@ -24,7 +24,30 @@ export const onRequestPost: PagesFunction = async (context) => {
       );
     }
 
-    // Call Replicate API
+    // Get the latest version of instruct-pix2pix model
+    // Replicate API requires a specific version hash, not just model name
+    let versionHash = "30a09a59c1f5d38f77c2b80a5eac5f30c40f1b0"; // Fallback version
+    
+    try {
+      const modelResponse = await fetch("https://api.replicate.com/v1/models/timothybrooks/instruct-pix2pix", {
+        headers: {
+          "Authorization": `Token ${replicateToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (modelResponse.ok) {
+        const modelInfo = await modelResponse.json();
+        if (modelInfo.latest_version) {
+          versionHash = modelInfo.latest_version.id;
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching model version, using fallback:", err);
+      // Continue with fallback version
+    }
+
+    // Call Replicate API to create prediction
     const response = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
@@ -32,7 +55,7 @@ export const onRequestPost: PagesFunction = async (context) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        version: "30a09a59c1f5d38f77c2b80a5eac5f30c40f1b0",
+        version: versionHash,
         input: {
           image: image,
           prompt: prompt,
