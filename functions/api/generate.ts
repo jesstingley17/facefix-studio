@@ -58,11 +58,9 @@ export const onRequestPost: PagesFunction = async (context) => {
     }
     
     if (!useCustomModel) {
-      // Fallback: Get the latest version of instruct-pix2pix model
-      versionHash = "30a09a59c1f5d38f77c2b80a5eac5f30c40f1b0"; // Fallback version
-      
+      // Use stability-ai/stable-diffusion-img2img as default instead of instruct-pix2pix
       try {
-        const modelResponse = await fetch("https://api.replicate.com/v1/models/timothybrooks/instruct-pix2pix", {
+        const modelResponse = await fetch("https://api.replicate.com/v1/models/stability-ai/stable-diffusion-img2img", {
           headers: {
             "Authorization": `Token ${replicateToken}`,
             "Content-Type": "application/json",
@@ -73,11 +71,16 @@ export const onRequestPost: PagesFunction = async (context) => {
           const modelInfo = await modelResponse.json();
           if (modelInfo.latest_version) {
             versionHash = modelInfo.latest_version.id;
+          } else {
+            // Fallback version hash for stability-ai/stable-diffusion-img2img
+            versionHash = "15a3689ee13b0d2616e98820eca31d4c3abcd36672df6afce5cb6feb1d66087d";
           }
+        } else {
+          versionHash = "15a3689ee13b0d2616e98820eca31d4c3abcd36672df6afce5cb6feb1d66087d";
         }
       } catch (err) {
         console.error("Error fetching model version, using fallback:", err);
-        // Continue with fallback version
+        versionHash = "15a3689ee13b0d2616e98820eca31d4c3abcd36672df6afce5cb6feb1d66087d";
       }
     }
 
@@ -93,7 +96,7 @@ export const onRequestPost: PagesFunction = async (context) => {
       imageInput = `data:image/png;base64,${imageInput}`;
     }
     
-    // Input parameters - custom model uses standard SD img2img params
+    // Input parameters - both custom model and stability-ai/stable-diffusion-img2img use standard SD img2img params
     const inputParams: any = {
       image: imageInput,
       prompt: prompt,
@@ -103,15 +106,9 @@ export const onRequestPost: PagesFunction = async (context) => {
       negative_prompt: "blurry, low quality, distorted, watermark, text, bad anatomy, deformed, disfigured, poorly drawn, bad hands, bad proportions, extra limbs, ugly, poorly rendered face, bad composition, cloned face, gross proportions, malformed, mutated, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed",
     };
     
-    // For instruct-pix2pix, use different parameter name
-    if (!useCustomModel) {
-      inputParams.image_guidance_scale = 1.5;
-      delete inputParams.strength; // instruct-pix2pix doesn't use strength
-    }
-    
-    console.log(`Using ${useCustomModel ? 'custom' : 'instruct-pix2pix'} model: ${versionHash.substring(0, 8)}...`);
+    console.log(`Using ${useCustomModel ? 'custom' : 'stability-ai/stable-diffusion-img2img'} model: ${versionHash.substring(0, 8)}...`);
     console.log(`Input params: prompt="${prompt.substring(0, 50)}...", strength=${inputParams.strength || 'N/A'}, image format=${imageInput.substring(0, 30)}...`);
-    console.log(`Model URL: ${useCustomModel ? `https://replicate.com/${customModel}` : 'https://replicate.com/timothybrooks/instruct-pix2pix'}`);
+    console.log(`Model URL: ${useCustomModel ? `https://replicate.com/${customModel}` : 'https://replicate.com/stability-ai/stable-diffusion-img2img'}`);
     
     // Call Replicate API to create prediction
     const response = await fetch("https://api.replicate.com/v1/predictions", {
