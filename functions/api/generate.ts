@@ -97,15 +97,15 @@ export const onRequestPost: PagesFunction = async (context) => {
     }
     
     // Input parameters - optimized for identity preservation (prevent deformation and aging)
-    // VERY LOW strength (0.20-0.30) to preserve person's likeness and prevent deformation
+    // ULTRA LOW strength (0.15-0.20) to preserve person's likeness and prevent deformation
     // Enhanced prompt to preserve youthfulness and prevent aging
-    const enhancedPrompt = `${prompt}, preserving youthfulness, maintaining current age, no aging effects, youthful appearance, preserve age`;
+    const enhancedPrompt = `${prompt}, preserving exact facial features, maintaining identity, preserving youthfulness, maintaining current age, no aging effects, youthful appearance, preserve age, keep person recognizable`;
     
     const inputParams: any = {
       image: imageInput,
       prompt: enhancedPrompt,
-      strength: 0.25,  // VERY LOW (0.20-0.30) to preserve identity and prevent deformation
-      guidance_scale: 7.5,  // Slightly higher (7-8) to follow prompt while preserving face
+      strength: 0.20,  // ULTRA LOW (0.15-0.20) - minimum transformation to preserve identity
+      guidance_scale: 7.0,  // Lower (6-7) to be gentler and preserve face better
       num_inference_steps: 50,  // 30-60 typical, higher = cleaner details
       negative_prompt: "aged, aging, wrinkles, old, elderly, age progression, age regression, older, aged face, wrinkles, fine lines, sagging skin, age spots, gray hair, white hair, balding, receding hairline, mature, senior, middle-aged, artificial, fake, CGI, 3D render, digital art, illustration, painting, drawing, cartoon, anime, plastic skin, airbrushed, over-processed, HDR, oversaturated, unnatural colors, perfect symmetry, uncanny valley, watermark, text, signature, logo, blurry, low quality, jpeg artifacts, extra fingers, deformed hands, bad anatomy, floating elements, disconnected limbs, AI generated, midjourney, stable diffusion, dall-e, stock photo watermark, shutterstock, hyper-realistic, ultra-detailed, 8K, masterpiece, perfect, flawless, beautiful, trending on artstation",
     };
