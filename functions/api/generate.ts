@@ -81,6 +81,22 @@ export const onRequestPost: PagesFunction = async (context) => {
       }
     }
 
+    // Input parameters - custom model uses standard SD img2img params
+    const inputParams: any = {
+      image: image,
+      prompt: prompt,
+      strength: 0.75,  // How much to transform (0.0-1.0)
+      guidance_scale: 7.5,
+      num_inference_steps: 20,
+      negative_prompt: "blurry, low quality, distorted, watermark, text",
+    };
+    
+    // For instruct-pix2pix, use different parameter name
+    if (!useCustomModel) {
+      inputParams.image_guidance_scale = 1.5;
+      delete inputParams.strength; // instruct-pix2pix doesn't use strength
+    }
+    
     // Call Replicate API to create prediction
     const response = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
@@ -88,22 +104,6 @@ export const onRequestPost: PagesFunction = async (context) => {
         "Authorization": `Token ${replicateToken}`,
         "Content-Type": "application/json",
       },
-      // Input parameters - custom model uses standard SD img2img params
-      const inputParams: any = {
-        image: image,
-        prompt: prompt,
-        strength: 0.75,  // How much to transform (0.0-1.0)
-        guidance_scale: 7.5,
-        num_inference_steps: 20,
-        negative_prompt: "blurry, low quality, distorted, watermark, text",
-      };
-      
-      // For instruct-pix2pix, use different parameter name
-      if (!useCustomModel) {
-        inputParams.image_guidance_scale = 1.5;
-        delete inputParams.strength; // instruct-pix2pix doesn't use strength
-      }
-      
       body: JSON.stringify({
         version: versionHash,
         input: inputParams,
