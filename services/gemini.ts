@@ -122,19 +122,27 @@ export const editPhoto = async (
     const candidate = response.candidates[0];
     
     // Check for safety blocking
-    if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'RECITATION') {
+    if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'RECITATION' || candidate.finishReason === 'PROHIBITED_CONTENT') {
       const safetyRatings = candidate.safetyRatings || [];
       const blockedCategories = safetyRatings
         .filter((r: any) => r.blocked === true)
         .map((r: any) => r.category)
         .join(', ');
       
-      throw new Error(`Image generation blocked by safety filters${blockedCategories ? ` (${blockedCategories})` : ''}. Despite BLOCK_NONE settings, the model may still block certain content. Try adjusting the prompt or image.`);
+      let errorMsg = '';
+      if (candidate.finishReason === 'PROHIBITED_CONTENT') {
+        errorMsg = `Image generation blocked: PROHIBITED_CONTENT. Google's Gemini API is blocking this content at the model level despite BLOCK_NONE safety settings. This is a hard restriction that cannot be bypassed through API settings alone.`;
+      } else {
+        errorMsg = `Image generation blocked by safety filters${blockedCategories ? ` (${blockedCategories})` : ''}. Despite BLOCK_NONE settings, the model may still block certain content.`;
+      }
+      errorMsg += ` Try adjusting the prompt to be more artistic/creative, use different wording, or try a different image.`;
+      
+      throw new Error(errorMsg);
     }
 
     // Check for other blocking reasons
     if (candidate.finishReason && candidate.finishReason !== 'STOP') {
-      throw new Error(`Image generation failed. Finish reason: ${candidate.finishReason}`);
+      throw new Error(`Image generation failed. Finish reason: ${candidate.finishReason}. The model refused to generate content based on the input.`);
     }
 
     // Extract image data
