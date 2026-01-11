@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { saveImageToGallery } from '../utils/imageSave';
 
 interface ResultCardProps {
   original: string;
@@ -100,14 +101,24 @@ export const ResultCard: React.FC<ResultCardProps> = ({ original, generated, isL
 
       {/* Bottom Actions */}
       <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 sm:gap-4">
-        <a 
-          href={generated} 
-          download="enhanced-photo.png"
+        <button
+          onClick={async () => {
+            try {
+              await saveImageToGallery(generated, 'enhanced-photo.png');
+            } catch (error: any) {
+              console.error('Failed to save image:', error);
+              // Fallback: try direct download link
+              const link = document.createElement('a');
+              link.href = generated;
+              link.download = 'enhanced-photo.png';
+              link.click();
+            }
+          }}
           className="px-4 sm:px-6 py-2 bg-white text-slate-900 font-bold text-sm sm:text-base rounded-full shadow-lg hover:bg-slate-100 active:bg-slate-200 transition-all flex items-center gap-2 touch-manipulation min-h-[44px]"
         >
-          <i className="fas fa-download"></i>
-          <span>Download</span>
-        </a>
+          <i className="fas fa-save"></i>
+          <span>Save to Gallery</span>
+        </button>
       </div>
     </div>
   );
