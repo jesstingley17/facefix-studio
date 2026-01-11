@@ -1,0 +1,9 @@
+name = "facefix-studio"
+compatibility_date = "2024-01-01"
+
+[env.production]
+pages_build_output_dir = "dist"
+
+[env.preview]
+pages_build_output_dir = "dist"
+
