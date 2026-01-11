@@ -120,7 +120,7 @@ const App: React.FC = () => {
               </div>
             </div>
             
-            <div className="lg:col-span-4 sticky top-4 sm:top-6 lg:top-28 order-1 lg:order-2 z-10">
+            <div className="lg:col-span-4 order-1 lg:order-2 z-10">
               <ControlPanel 
                 prompt={prompt} 
                 setPrompt={setPrompt} 
