@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Preset } from '../types';
 
 interface ControlPanelProps {
   prompt: string;
@@ -9,13 +8,6 @@ interface ControlPanelProps {
   isLoading: boolean;
   onReset: () => void;
 }
-
-const PRESETS: Preset[] = [
-  { id: '1', label: 'Studio Portrait', prompt: 'Professional high-end studio portrait, soft cinematic lighting, neutral blurred background, professional attire', icon: 'fa-camera' },
-  { id: '2', label: 'Cyberpunk', prompt: 'Neon-lit cyberpunk city background, futuristic metallic jacket, dramatic blue and pink lighting, detailed textures', icon: 'fa-robot' },
-  { id: '3', label: 'Age 80', prompt: 'Hyper-realistic aging to age 80, detailed wrinkles, white hair, wise expression, maintaining lighting', icon: 'fa-hourglass-half' },
-  { id: '4', label: 'Statue', prompt: 'A magnificent marble statue, carved from white Carrara stone, museum lighting, classical style', icon: 'fa-monument' },
-];
 
 export const ControlPanel: React.FC<ControlPanelProps> = ({ 
   prompt, 
@@ -28,29 +20,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     <div className="space-y-4 sm:space-y-6 bg-slate-900/40 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border border-slate-800 h-full">
       <div>
         <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
-          Creative Presets
-        </label>
-        <div className="grid grid-cols-2 gap-2 sm:gap-3">
-          {PRESETS.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setPrompt(p.prompt)}
-              className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl sm:rounded-2xl border transition-all touch-manipulation active:scale-95 ${
-                prompt === p.prompt 
-                  ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-400' 
-                  : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:border-slate-500 active:bg-slate-800/50'
-              }`}
-            >
-              <i className={`fas ${p.icon} mb-1 sm:mb-2 text-base sm:text-lg`}></i>
-              <span className="text-xs font-semibold text-center leading-tight">{p.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
-          Custom Transformation
+          Transformation Prompt
         </label>
         <textarea
           value={prompt}
