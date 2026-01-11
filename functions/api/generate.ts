@@ -81,11 +81,23 @@ export const onRequestPost: PagesFunction = async (context) => {
       }
     }
 
+    // Prepare image - Replicate accepts data URLs directly for img2img models
+    // Make sure it's properly formatted as a data URL
+    let imageInput = image;
+    if (imageInput.startsWith('data:')) {
+      // Already a data URL, use as-is
+    } else if (imageInput.startsWith('http')) {
+      // URL, use as-is
+    } else {
+      // Assume base64, add data URL prefix
+      imageInput = `data:image/png;base64,${imageInput}`;
+    }
+    
     // Input parameters - custom model uses standard SD img2img params
     const inputParams: any = {
-      image: image,
+      image: imageInput,
       prompt: prompt,
-      strength: 0.75,  // How much to transform (0.0-1.0)
+      strength: 0.75,  // How much to transform (0.0-1.0) - higher = more transformation
       guidance_scale: 7.5,
       num_inference_steps: 20,
       negative_prompt: "blurry, low quality, distorted, watermark, text",
@@ -96,6 +108,9 @@ export const onRequestPost: PagesFunction = async (context) => {
       inputParams.image_guidance_scale = 1.5;
       delete inputParams.strength; // instruct-pix2pix doesn't use strength
     }
+    
+    console.log(`Using ${useCustomModel ? 'custom' : 'instruct-pix2pix'} model: ${versionHash.substring(0, 8)}...`);
+    console.log(`Input params: prompt="${prompt.substring(0, 50)}...", strength=${inputParams.strength || 'N/A'}, image format=${imageInput.substring(0, 30)}...`);
     
     // Call Replicate API to create prediction
     const response = await fetch("https://api.replicate.com/v1/predictions", {
@@ -111,14 +126,16 @@ export const onRequestPost: PagesFunction = async (context) => {
     });
 
     if (!response.ok) {
-      const error = await response.text();
+      const errorText = await response.text();
+      console.error(`Replicate API error (${response.status}):`, errorText);
       return new Response(
-        JSON.stringify({ error: `Replicate API error: ${error}` }),
+        JSON.stringify({ error: `Replicate API error: ${errorText}` }),
         { status: response.status, headers: { "Content-Type": "application/json" } }
       );
     }
 
     const result = await response.json();
+    console.log(`Prediction created: id=${result.id}, status=${result.status}`);
     
     // Poll for completion if needed
     if (result.status === "starting" || result.status === "processing") {
