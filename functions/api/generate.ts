@@ -138,10 +138,28 @@ export const onRequestPost: PagesFunction = async (context) => {
     const result = await response.json();
     console.log(`Prediction created: id=${result.id}, status=${result.status}`);
     
+    // Log the prediction URL for debugging
+    if (result.urls) {
+      console.log(`Prediction URL: ${result.urls.get || result.urls.get || 'N/A'}`);
+    }
+    
+    // If prediction failed immediately, return error
+    if (result.status === "failed" || result.status === "canceled") {
+      const errorMsg = result.error || result.logs?.join('\n') || 'Unknown error';
+      console.error(`Prediction ${result.status}:`, errorMsg);
+      return new Response(
+        JSON.stringify({ 
+          error: `Prediction ${result.status}: ${errorMsg}`,
+          id: result.id,
+          status: result.status
+        }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+    
     // Poll for completion if needed
     if (result.status === "starting" || result.status === "processing") {
-      // In a real implementation, you'd poll the URL in result.urls.get
-      // For now, return the prediction object
+      // Return the prediction object so client can poll
       return new Response(
         JSON.stringify({ 
           id: result.id,
@@ -151,7 +169,8 @@ export const onRequestPost: PagesFunction = async (context) => {
         { headers: { "Content-Type": "application/json" } }
       );
     }
-
+    
+    // If already succeeded, return result directly
     return new Response(
       JSON.stringify(result),
       { headers: { "Content-Type": "application/json" } }
