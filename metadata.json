@@ -1,0 +1,8 @@
+
+{
+  "name": "FaceFix Studio",
+  "description": "A high-fidelity AI photo editor that enhances and transforms portraits while strictly preserving original facial features using Gemini AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
