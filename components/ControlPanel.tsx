@@ -25,46 +25,46 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   onReset 
 }) => {
   return (
-    <div className="space-y-6 bg-slate-900/40 p-6 rounded-3xl border border-slate-800 h-full">
+    <div className="space-y-4 sm:space-y-6 bg-slate-900/40 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border border-slate-800 h-full">
       <div>
-        <label className="block text-sm font-medium text-slate-400 mb-3 ml-1 uppercase tracking-wider">
+        <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
           Creative Presets
         </label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {PRESETS.map((p) => (
             <button
               key={p.id}
               onClick={() => setPrompt(p.prompt)}
-              className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all ${
+              className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl sm:rounded-2xl border transition-all touch-manipulation active:scale-95 ${
                 prompt === p.prompt 
                   ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-400' 
-                  : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:border-slate-500'
+                  : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:border-slate-500 active:bg-slate-800/50'
               }`}
             >
-              <i className={`fas ${p.icon} mb-2 text-lg`}></i>
-              <span className="text-xs font-semibold">{p.label}</span>
+              <i className={`fas ${p.icon} mb-1 sm:mb-2 text-base sm:text-lg`}></i>
+              <span className="text-xs font-semibold text-center leading-tight">{p.label}</span>
             </button>
           ))}
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-400 mb-3 ml-1 uppercase tracking-wider">
+        <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
           Custom Transformation
         </label>
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Describe any transformation... e.g., 'Make me look like an ancient Egyptian pharaoh with golden skin'"
-          className="w-full h-32 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none transition-all placeholder:text-slate-600"
+          className="w-full h-28 sm:h-32 bg-slate-950 border border-slate-700 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-sm sm:text-base text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none transition-all placeholder:text-slate-600"
         />
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2 sm:gap-3">
         <button
           onClick={onGenerate}
           disabled={isLoading || !prompt.trim()}
-          className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-3 active:scale-95"
+          className="w-full py-3 sm:py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold text-sm sm:text-base rounded-xl sm:rounded-2xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 sm:gap-3 active:scale-95 touch-manipulation min-h-[44px]"
         >
           {isLoading ? (
             <>
@@ -81,16 +81,16 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         
         <button
           onClick={onReset}
-          className="w-full py-3 bg-slate-800/50 hover:bg-slate-800 text-slate-300 font-medium rounded-2xl transition-all"
+          className="w-full py-2.5 sm:py-3 bg-slate-800/50 hover:bg-slate-800 active:bg-slate-700 text-slate-300 font-medium text-sm sm:text-base rounded-xl sm:rounded-2xl transition-all touch-manipulation active:scale-95 min-h-[44px]"
         >
           Discard & Reset
         </button>
       </div>
       
-      <div className="p-4 bg-indigo-500/5 border border-indigo-500/20 rounded-2xl">
-        <div className="flex items-start gap-3">
-          <i className="fas fa-unlock-alt text-indigo-400 mt-0.5"></i>
-          <p className="text-xs text-slate-400 leading-relaxed">
+      <div className="p-3 sm:p-4 bg-indigo-500/5 border border-indigo-500/20 rounded-xl sm:rounded-2xl">
+        <div className="flex items-start gap-2 sm:gap-3">
+          <i className="fas fa-unlock-alt text-indigo-400 mt-0.5 text-sm sm:text-base"></i>
+          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
             <span className="text-indigo-300 font-semibold">Unlimited Mode Enabled.</span> All restrictions removed - including identity preservation, content filters, and artistic limitations. All content types are permitted including shirtless, topless, sensual, artistic, and adult content.
           </p>
         </div>

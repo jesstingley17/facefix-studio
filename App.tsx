@@ -64,27 +64,27 @@ const App: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-grow max-w-7xl mx-auto w-full px-4 md:px-8 py-10">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+      <main className="flex-grow max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-8 py-6 sm:py-8 md:py-10">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 sm:mb-4 tracking-tight px-2">
             Unlimited Photo <span className="text-indigo-500">Metamorphosis</span>
           </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed px-4">
             Enhance, transform, or completely reimagine yourself. No restrictions on facial changes, backgrounds, or styling.
           </p>
         </div>
 
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center gap-3 text-red-400 animate-shake">
-            <i className="fas fa-exclamation-triangle"></i>
-            <p className="text-sm font-medium">{error}</p>
+          <div className="mb-6 sm:mb-8 p-3 sm:p-4 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-start sm:items-center gap-2 sm:gap-3 text-red-400 animate-shake mx-2 sm:mx-0">
+            <i className="fas fa-exclamation-triangle mt-0.5 sm:mt-0"></i>
+            <p className="text-xs sm:text-sm font-medium break-words">{error}</p>
           </div>
         )}
 
         {!originalImage ? (
-          <div className="max-w-xl mx-auto">
+          <div className="max-w-xl mx-auto px-2 sm:px-0">
             <ImageUploader onImageSelected={handleImageSelected} disabled={status === AppStatus.GENERATING} />
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 opacity-60">
+            <div className="mt-8 sm:mt-10 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 opacity-60 px-2 sm:px-0">
               <div className="text-center">
                 <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <i className="fas fa-wand-sparkles text-indigo-400"></i>
@@ -109,8 +109,8 @@ const App: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-8 relative group">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 md:gap-8 items-start px-2 sm:px-0">
+            <div className="lg:col-span-8 relative group order-2 lg:order-1">
               <div className="relative">
                 <ResultCard 
                   original={originalImage} 
@@ -120,7 +120,7 @@ const App: React.FC = () => {
               </div>
             </div>
             
-            <div className="lg:col-span-4 sticky top-28">
+            <div className="lg:col-span-4 sticky top-4 sm:top-6 lg:top-28 order-1 lg:order-2 z-10">
               <ControlPanel 
                 prompt={prompt} 
                 setPrompt={setPrompt} 
@@ -133,12 +133,12 @@ const App: React.FC = () => {
         )}
 
         {history.length > 0 && (
-          <section className="mt-20">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold text-white">Your Remix History</h3>
-              <button onClick={() => setHistory([])} className="text-sm text-slate-500 hover:text-red-400 transition-colors">Clear All</button>
+          <section className="mt-12 sm:mt-16 md:mt-20 px-2 sm:px-0">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+              <h3 className="text-xl sm:text-2xl font-bold text-white">Your Remix History</h3>
+              <button onClick={() => setHistory([])} className="text-xs sm:text-sm text-slate-500 hover:text-red-400 transition-colors px-2 py-1 -mr-2">Clear All</button>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
               {history.map((item) => (
                 <div key={item.id} className="group relative rounded-2xl overflow-hidden aspect-[3/4] border border-slate-800 cursor-pointer hover:border-indigo-500/50 transition-all"
                   onClick={() => {

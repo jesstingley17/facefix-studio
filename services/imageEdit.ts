@@ -1,30 +1,34 @@
 /**
  * Unified image editing service
- * Tries Gemini first (faster, better identity preservation), falls back to Replicate (asiryan/babes-xl)
+ * Uses Gemini for every photo generation with professional enhancement
+ * Falls back to Replicate only if Gemini fails (content blocking, API errors)
  */
 
 import { editPhoto as geminiEditPhoto } from './gemini';
 import { editPhoto as replicateEditPhoto } from './replicate';
 
 /**
- * Edit photo with Gemini first, fallback to Replicate (babes-xl)
+ * Edit photo with Gemini - enhanced for every generation
  * Benefits:
- * - Gemini: Fast, synchronous, better identity preservation
- * - Replicate (babes-xl): More permissive, no content restrictions, fallback if Gemini fails/blocks
+ * - Gemini: Professional photo enhancement, better identity preservation, fast, synchronous
+ * - Replicate (babes-xl): Fallback only if Gemini fails/blocks content
+ * 
+ * Gemini enhances every photo generation with professional quality improvements
  */
 export const editPhoto = async (
   base64Image: string,
   userPrompt: string
 ): Promise<string> => {
-  // Try Gemini first
+  // Always try Gemini first - enhances every photo generation
   try {
-    console.log('🎨 Attempting image generation with Gemini (better identity preservation)...');
+    console.log('🎨 Enhancing photo with Gemini AI (professional quality)...');
     const result = await geminiEditPhoto(base64Image, userPrompt);
-    console.log('✅ Gemini generation successful');
+    console.log('✅ Gemini enhancement successful - professional quality image generated');
     return result;
   } catch (geminiError: any) {
-    console.warn('⚠️ Gemini generation failed, falling back to Replicate (babes-xl):', geminiError.message);
+    console.warn('⚠️ Gemini enhancement failed, falling back to Replicate (babes-xl):', geminiError.message);
     
+    // Only fallback to Replicate if Gemini fails
     // Check if it's a content blocking issue (fallback to Replicate)
     const isContentBlocked = 
       geminiError.message?.includes('PROHIBITED_CONTENT') ||
@@ -34,7 +38,7 @@ export const editPhoto = async (
       geminiError.message?.includes('API key not valid');
     
     if (isContentBlocked) {
-      console.log('🔄 Content blocked by Gemini or API issue, using Replicate fallback (babes-xl)...');
+      console.log('🔄 Content blocked by Gemini, using Replicate fallback (babes-xl)...');
     } else {
       console.log('🔄 Gemini error occurred, trying Replicate fallback (babes-xl)...');
     }
