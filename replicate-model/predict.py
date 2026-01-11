@@ -42,13 +42,13 @@ class Predictor(BasePredictor):
             description="How closely to follow the prompt. Higher = more adherence",
             ge=1.0,
             le=20.0,
-            default=7.5
+            default=10.0
         ),
         num_inference_steps: int = Input(
             description="Number of denoising steps. More = better quality but slower",
             ge=10,
             le=50,
-            default=20
+            default=40
         ),
         seed: Optional[int] = Input(
             description="Random seed for reproducibility. Leave empty for random.",
@@ -59,7 +59,7 @@ class Predictor(BasePredictor):
         
         # Load and prepare input image
         input_image = Image.open(str(image)).convert("RGB")
-        input_image = input_image.resize((512, 512))  # Standard SD size
+        input_image = input_image.resize((768, 768))  # Higher resolution for better quality
         
         # Set seed if provided
         generator = None

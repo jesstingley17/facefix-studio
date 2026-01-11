@@ -97,10 +97,10 @@ export const onRequestPost: PagesFunction = async (context) => {
     const inputParams: any = {
       image: imageInput,
       prompt: prompt,
-      strength: 0.75,  // How much to transform (0.0-1.0) - higher = more transformation
-      guidance_scale: 7.5,
-      num_inference_steps: 20,
-      negative_prompt: "blurry, low quality, distorted, watermark, text",
+      strength: 0.8,  // How much to transform (0.0-1.0) - higher = more transformation
+      guidance_scale: 10,  // Increased for better prompt adherence
+      num_inference_steps: 40,  // Increased for much better quality
+      negative_prompt: "blurry, low quality, distorted, watermark, text, bad anatomy, deformed, disfigured, poorly drawn, bad hands, bad proportions, extra limbs, ugly, poorly rendered face, bad composition, cloned face, gross proportions, malformed, mutated, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed",
     };
     
     // For instruct-pix2pix, use different parameter name
