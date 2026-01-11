@@ -36,5 +36,16 @@ Quick steps:
 1. Connect your GitHub repository to Cloudflare Pages
 2. Set build command: `npm run build`
 3. Set build output directory: `dist`
-4. Add environment variable: `REPLICATE_API_TOKEN` (your Replicate API token)
+4. Add environment variables:
+   - `REPLICATE_API_TOKEN` (your Replicate API token)
+   - `CUSTOM_MODEL=jesstingley17/facefix-studio` (optional - uses your custom model)
 5. Deploy!
+
+## Custom Model
+
+✅ **Your custom Stable Diffusion model is deployed!**
+
+- **Model URL**: https://replicate.com/jesstingley17/facefix-studio
+- **Status**: Ready to use
+
+See [MODEL_DEPLOYED.md](MODEL_DEPLOYED.md) for configuration instructions.
