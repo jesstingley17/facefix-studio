@@ -1,18 +1,16 @@
 
 import React, { useState } from 'react';
-import { AppStatus, GenerationResult, FaceLandmarks } from './types';
-import { editPhoto, detectLandmarks } from './services/gemini';
+import { AppStatus, GenerationResult } from './types';
+import { editPhoto } from './services/gemini';
 import { Header } from './components/Header';
 import { ImageUploader } from './components/ImageUploader';
 import { ControlPanel } from './components/ControlPanel';
 import { ResultCard } from './components/ResultCard';
-import { MappingOverlay } from './components/MappingOverlay';
 
 const App: React.FC = () => {
   const [status, setStatus] = useState<AppStatus>(AppStatus.IDLE);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-  const [landmarks, setLandmarks] = useState<FaceLandmarks | null>(null);
   const [prompt, setPrompt] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<GenerationResult[]>([]);
@@ -20,18 +18,8 @@ const App: React.FC = () => {
   const handleImageSelected = async (base64: string) => {
     setOriginalImage(base64);
     setGeneratedImage(null);
-    setLandmarks(null);
     setError(null);
     setStatus(AppStatus.IDLE);
-
-    // Landmark detection is now optional and doesn't block usage
-    try {
-      const detected = await detectLandmarks(base64);
-      setLandmarks(detected);
-    } catch (err: any) {
-      console.log("Landmark detection optional:", err);
-      // Continue without landmarks
-    }
   };
 
   const handleGenerate = async () => {
@@ -41,7 +29,7 @@ const App: React.FC = () => {
     setError(null);
 
     try {
-      const resultUrl = await editPhoto(originalImage, prompt || '', landmarks || undefined);
+      const resultUrl = await editPhoto(originalImage, prompt || '');
       setGeneratedImage(resultUrl);
       
       const newRecord: GenerationResult = {
@@ -63,7 +51,6 @@ const App: React.FC = () => {
   const resetAll = () => {
     setOriginalImage(null);
     setGeneratedImage(null);
-    setLandmarks(null);
     setPrompt('');
     setStatus(AppStatus.IDLE);
     setError(null);
@@ -126,12 +113,6 @@ const App: React.FC = () => {
                   generated={generatedImage || ''} 
                   isLoading={status === AppStatus.GENERATING} 
                 />
-                {!generatedImage && (
-                  <MappingOverlay 
-                    landmarks={landmarks} 
-                    isMapping={status === AppStatus.MAPPING} 
-                  />
-                )}
               </div>
             </div>
             

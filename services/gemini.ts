@@ -64,12 +64,12 @@ export const detectLandmarks = async (base64Image: string): Promise<FaceLandmark
 };
 
 /**
- * Stage 2: Edit photo with UNLIMITED creative freedom - NO RESTRICTIONS
+ * Edit photo with UNLIMITED creative freedom - NO RESTRICTIONS
+ * Face mapping disabled - direct image transformation
  */
 export const editPhoto = async (
   base64Image: string, 
-  userPrompt: string, 
-  landmarks?: FaceLandmarks
+  userPrompt: string
 ): Promise<string> => {
   const ai = getAIClient();
 
