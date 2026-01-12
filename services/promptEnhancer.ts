@@ -33,8 +33,8 @@ OPTIMIZATION REQUIREMENTS:
 2. Include quality specifications (e.g., "4K quality", "high resolution", "detailed textures")
 3. Add detail enhancement terms (e.g., "fine details", "sharp", "crisp", "defined")
 4. Include professional editing terms (e.g., "enhanced colors", "natural color grading", "professional polish")
-5. CRITICAL: Add terms that preserve identity and reference photo fidelity (e.g., "maintain exact likeness", "preserve original appearance", "keep same person", "identical facial features")
-6. Emphasize maintaining the reference photo structure and identity
+5. CRITICAL: Add terms that preserve facial identity (e.g., "same face", "identical facial features", "preserve face structure", "keep same person", "maintain facial identity", "exact facial match")
+6. Emphasize preserving the exact facial features, structure, and appearance from the reference photo
 7. Maintain the original intent and transformation request
 8. Keep the prompt concise but effective (not too long, but include key quality terms)
 9. Ensure the prompt will produce sharp, detailed, high-quality results while preserving the original person's identity

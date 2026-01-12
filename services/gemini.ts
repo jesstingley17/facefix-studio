@@ -121,14 +121,14 @@ DETAILING & SHARPENING SPECIFICATIONS:
 
 TRANSFORMATION GUIDELINES:
 - Apply the requested transformation: "${userPrompt}"
-- MAINTAIN EXACT REFERENCE PHOTO STRUCTURE: Preserve the original photo's exact composition, facial structure, body proportions, and overall appearance
-- PRESERVE IDENTITY STRICTLY: Keep the exact same face, features, and likeness from the reference photo - do not alter facial structure, bone structure, or distinguishing features
-- MAINTAIN REFERENCE PHOTO FIDELITY: Stay true to the reference photo's appearance - only modify what is explicitly requested in the transformation
-- Keep proportions identical to the reference photo
-- Preserve all facial characteristics exactly as they appear in the reference
-- Maintain the same person's appearance - do not generate a different person
-- Ensure changes are minimal and only apply to the specific transformation requested
-- Keep body proportions, height, build exactly as in the reference photo
+- CRITICAL: The reference photo shows the EXACT person to generate - use it as the source for all facial features
+- PRESERVE FACIAL IDENTITY: Keep the exact same face from the reference photo - same eyes, nose, mouth, face shape, bone structure, jawline, cheekbones, eyebrows, facial proportions
+- MAINTAIN FACIAL STRUCTURE: Do not change the person's facial structure, bone structure, or any distinguishing facial features
+- KEEP SAME PERSON: Generate the same person from the reference photo with their exact facial characteristics and features
+- Preserve facial proportions, spacing between features, and overall facial geometry exactly as in the reference
+- Only modify what is explicitly requested in the transformation - keep everything else identical to the reference photo
+- Ensure the generated image clearly shows the same person as in the reference photo
+- Maintain body proportions and overall appearance from the reference photo
 
 TECHNICAL STANDARDS:
 - Resolution: Maximum quality and detail
