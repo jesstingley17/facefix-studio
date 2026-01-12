@@ -91,6 +91,24 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     setSelectedPose(selectedPose === poseId ? null : poseId);
   };
 
+  const [isEnhancing, setIsEnhancing] = useState(false);
+
+  const handleEnhancePrompt = async () => {
+    if (!prompt.trim() || isEnhancing) return;
+    
+    setIsEnhancing(true);
+    try {
+      const enhanced = await enhancePrompt(prompt);
+      setPrompt(enhanced);
+    } catch (error: any) {
+      console.error('Failed to enhance prompt:', error);
+      // Don't crash the app if enhancement fails - just log the error
+      // The original prompt remains unchanged
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6 bg-slate-900/40 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border border-slate-800 h-full">
       {/* Lighting Options */}
