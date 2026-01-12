@@ -33,12 +33,11 @@ OPTIMIZATION REQUIREMENTS:
 2. Include quality specifications (e.g., "4K quality", "high resolution", "detailed textures")
 3. Add detail enhancement terms (e.g., "fine details", "sharp", "crisp", "defined")
 4. Include professional editing terms (e.g., "enhanced colors", "natural color grading", "professional polish")
-5. CRITICAL: Add terms that preserve identity and reference photo fidelity (e.g., "maintain exact likeness", "preserve original appearance", "keep same person", "identical facial features")
-6. Emphasize maintaining the reference photo structure and identity
-7. Maintain the original intent and transformation request
-8. Keep the prompt concise but effective (not too long, but include key quality terms)
-9. Ensure the prompt will produce sharp, detailed, high-quality results while preserving the original person's identity
-10. Add terms that emphasize realism and professional quality
+5. Maintain general similarity to reference while allowing creative interpretation
+6. Maintain the original intent and transformation request
+7. Keep the prompt concise but effective (not too long, but include key quality terms)
+8. Ensure the prompt will produce sharp, detailed, high-quality results with creative flexibility
+9. Add terms that emphasize realism and professional quality
 
 OUTPUT FORMAT:
 Return ONLY the enhanced prompt, nothing else. No explanations, no markdown, just the optimized prompt text.
@@ -60,9 +59,9 @@ Now enhance this prompt: "${userPrompt}"`;
         ],
       },
       config: {
-        temperature: 0.7, // Balanced creativity and consistency
+        temperature: 0.9, // Increased for more creative prompt enhancements
         topK: 40,
-        topP: 0.95,
+        topP: 0.98, // Increased for more diverse enhancements
       },
     });
 

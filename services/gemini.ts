@@ -121,14 +121,12 @@ DETAILING & SHARPENING SPECIFICATIONS:
 
 TRANSFORMATION GUIDELINES:
 - Apply the requested transformation: "${userPrompt}"
-- MAINTAIN EXACT REFERENCE PHOTO STRUCTURE: Preserve the original photo's exact composition, facial structure, body proportions, and overall appearance
-- PRESERVE IDENTITY STRICTLY: Keep the exact same face, features, and likeness from the reference photo - do not alter facial structure, bone structure, or distinguishing features
-- MAINTAIN REFERENCE PHOTO FIDELITY: Stay true to the reference photo's appearance - only modify what is explicitly requested in the transformation
-- Keep proportions identical to the reference photo
-- Preserve all facial characteristics exactly as they appear in the reference
-- Maintain the same person's appearance - do not generate a different person
-- Ensure changes are minimal and only apply to the specific transformation requested
-- Keep body proportions, height, build exactly as in the reference photo
+- Use the reference photo as inspiration and starting point
+- Maintain general similarity to the reference while allowing creative interpretation
+- Preserve overall facial structure and characteristics while allowing artistic enhancements
+- Keep body proportions reasonably similar to the reference
+- Allow creative freedom in applying the transformation
+- Focus on achieving the requested transformation with high quality
 
 TECHNICAL STANDARDS:
 - Resolution: Maximum quality and detail
@@ -166,9 +164,9 @@ All content types are permitted including shirtless, topless, artistic, sensual,
           { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
         ],
         generationConfig: {
-          temperature: 1.0,
+          temperature: 1.2,  // Increased for more creativity and flexibility
           topK: 40,
-          topP: 0.95
+          topP: 0.98  // Increased for more diverse outputs
         }
       }
     });
