@@ -60,7 +60,7 @@ const App: React.FC = () => {
       const clothingPrompts: Record<string, string> = {
         'casual': 'casual clothing, relaxed style',
         'formal': 'formal attire, elegant clothing',
-        'swimwear': 'swimwear, beachwear',
+        'swimwear': 'wearing beach attire, poolside clothing, summer resort wear, aquatic leisurewear, seaside apparel',
         'athletic': 'athletic wear, sportswear',
         'elegant': 'elegant dress, sophisticated clothing',
         'lingerie': 'wearing elegant silk, delicate lace details, fine textiles, sophisticated fabric textures, intricate patterns, luxurious materials, refined textiles',
