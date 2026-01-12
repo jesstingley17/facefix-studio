@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { enhancePrompt } from '../services/promptEnhancer';
 
 interface ControlPanelProps {
   prompt: string;
@@ -162,9 +163,29 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       </div>
 
       <div>
-        <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
-          Transformation Prompt
-        </label>
+        <div className="flex items-center justify-between mb-2 sm:mb-3">
+          <label className="block text-xs sm:text-sm font-medium text-slate-400 ml-1 uppercase tracking-wider">
+            Transformation Prompt
+          </label>
+          <button
+            onClick={handleEnhancePrompt}
+            disabled={!prompt.trim() || isEnhancing}
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-purple-500/10 hover:bg-purple-500/20 disabled:bg-slate-800/30 disabled:text-slate-500 text-purple-400 text-xs font-semibold rounded-lg sm:rounded-xl border border-purple-500/30 disabled:border-slate-700 transition-all active:scale-95 touch-manipulation"
+            title="Enhance prompt with AI"
+          >
+            {isEnhancing ? (
+              <>
+                <i className="fas fa-circle-notch fa-spin text-xs"></i>
+                <span className="hidden sm:inline">Enhancing...</span>
+              </>
+            ) : (
+              <>
+                <i className="fas fa-sparkles text-xs"></i>
+                <span className="hidden sm:inline">Enhance</span>
+              </>
+            )}
+          </button>
+        </div>
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
