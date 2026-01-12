@@ -121,13 +121,24 @@ DETAILING & SHARPENING SPECIFICATIONS:
 
 TRANSFORMATION GUIDELINES:
 - Apply the requested transformation: "${userPrompt}"
-- CRITICAL: The reference photo shows the EXACT person to generate - use it as the source for all facial features
-- PRESERVE FACIAL IDENTITY: Keep the exact same face from the reference photo - same eyes, nose, mouth, face shape, bone structure, jawline, cheekbones, eyebrows, facial proportions
-- MAINTAIN FACIAL STRUCTURE: Do not change the person's facial structure, bone structure, or any distinguishing facial features
-- KEEP SAME PERSON: Generate the same person from the reference photo with their exact facial characteristics and features
-- Preserve facial proportions, spacing between features, and overall facial geometry exactly as in the reference
-- Only modify what is explicitly requested in the transformation - keep everything else identical to the reference photo
-- Ensure the generated image clearly shows the same person as in the reference photo
+- ABSOLUTE REQUIREMENT: DO NOT ALTER, MODIFY, OR CHANGE ANY FACIAL FEATURES FROM THE REFERENCE PHOTO
+- CRITICAL: The reference photo shows the EXACT person to generate - copy their face precisely, do not create a different person
+- PRESERVE FACIAL IDENTITY STRICTLY: Keep the EXACT same face from the reference photo:
+  * Same eye shape, size, color, and position
+  * Same nose shape, size, and structure
+  * Same mouth shape, lip size, and position
+  * Same face shape and contours
+  * Same bone structure (jawline, cheekbones, forehead)
+  * Same eyebrow shape and position
+  * Same facial proportions and spacing between features
+  * Same skin tone and texture
+  * Same distinctive facial characteristics (moles, freckles, etc.)
+- DO NOT CHANGE: Facial structure, bone structure, facial geometry, feature sizes, feature positions, or any distinguishing characteristics
+- DO NOT ALTER: Eye color, eye shape, nose shape, mouth shape, face shape, jawline, cheekbones, or any facial features
+- KEEP SAME PERSON: Generate the exact same person from the reference photo - the face must be identical, only apply the requested transformation to other aspects
+- Preserve facial proportions, spacing between features, and overall facial geometry EXACTLY as in the reference photo
+- Only modify what is explicitly requested in the transformation - keep ALL facial features identical to the reference photo
+- Ensure the generated image shows the EXACT same person with the EXACT same face as in the reference photo
 - Maintain body proportions and overall appearance from the reference photo
 
 TECHNICAL STANDARDS:
