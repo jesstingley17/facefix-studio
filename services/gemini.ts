@@ -181,7 +181,7 @@ Output a single, highest-quality, professionally enhanced, detailed, and sharpen
     const candidate = response.candidates[0];
     
     // Check for safety blocking
-    if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'RECITATION' || candidate.finishReason === 'PROHIBITED_CONTENT') {
+    if (candidate.finishReason === 'SAFETY' || candidate.finishReason === 'RECITATION' || candidate.finishReason === 'PROHIBITED_CONTENT' || candidate.finishReason === 'IMAGE_SAFETY') {
       const safetyRatings = candidate.safetyRatings || [];
       const blockedCategories = safetyRatings
         .filter((r: any) => r.blocked === true)
@@ -189,12 +189,12 @@ Output a single, highest-quality, professionally enhanced, detailed, and sharpen
         .join(', ');
       
       let errorMsg = '';
-      if (candidate.finishReason === 'PROHIBITED_CONTENT') {
-        errorMsg = `Image generation blocked: PROHIBITED_CONTENT. Google's Gemini API is blocking this content at the model level despite BLOCK_NONE safety settings. This is a hard restriction that cannot be bypassed through API settings alone.`;
+      if (candidate.finishReason === 'PROHIBITED_CONTENT' || candidate.finishReason === 'IMAGE_SAFETY') {
+        errorMsg = `Image generation blocked: ${candidate.finishReason}. Google's Gemini API has hard model-level restrictions that cannot be bypassed, even with BLOCK_NONE safety settings. Gemini blocks certain content types (including some adult/explicit content) at the model level regardless of API settings.`;
       } else {
         errorMsg = `Image generation blocked by safety filters${blockedCategories ? ` (${blockedCategories})` : ''}. Despite BLOCK_NONE settings, the model may still block certain content.`;
       }
-      errorMsg += ` Try adjusting the prompt to be more artistic/creative, use different wording, or try a different image.`;
+      errorMsg += ` Gemini has limitations for adult/explicit content generation. Consider using a different AI service that supports unrestricted content generation, or adjust your prompt/image to be less explicit.`;
       
       throw new Error(errorMsg);
     }
