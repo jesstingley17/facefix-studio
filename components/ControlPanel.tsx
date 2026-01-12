@@ -40,6 +40,7 @@ const CLOTHING_OPTIONS: Option[] = [
   { id: 'swimwear', label: 'Swimwear', icon: 'fa-swimming-pool' },
   { id: 'athletic', label: 'Athletic', icon: 'fa-dumbbell' },
   { id: 'elegant', label: 'Elegant', icon: 'fa-gem' },
+  { id: 'lingerie', label: 'Lingerie', icon: 'fa-heart' },
   { id: 'streetwear', label: 'Streetwear', icon: 'fa-store' },
   { id: 'vintage', label: 'Vintage', icon: 'fa-clock-rotate-left' },
   { id: 'business', label: 'Business', icon: 'fa-briefcase' },
