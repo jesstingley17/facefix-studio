@@ -12,6 +12,7 @@ const App: React.FC = () => {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
+  const [selectedLighting, setSelectedLighting] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<GenerationResult[]>([]);
 
@@ -32,15 +33,36 @@ const App: React.FC = () => {
     setStatus(AppStatus.GENERATING);
     setError(null);
 
+    // Combine user prompt with selected lighting
+    let finalPrompt = prompt.trim();
+    if (selectedLighting) {
+      const lightingPrompts: Record<string, string> = {
+        'natural': 'natural daylight lighting',
+        'studio': 'professional studio lighting, softbox lighting',
+        'nighttime': 'nighttime lighting, ambient city lights',
+        'golden-hour': 'golden hour lighting, warm sunset glow',
+        'dramatic': 'dramatic lighting, high contrast, cinematic shadows',
+        'soft': 'soft diffused lighting, gentle shadows',
+        'warm': 'warm lighting, cozy atmosphere',
+        'cool': 'cool lighting, blue tones',
+        'rim': 'rim lighting, edge lighting',
+        'spotlight': 'spotlight, dramatic focused lighting',
+      };
+      const lightingPrompt = lightingPrompts[selectedLighting] || '';
+      if (lightingPrompt) {
+        finalPrompt = `${finalPrompt}, ${lightingPrompt}`;
+      }
+    }
+
     try {
-      const resultUrl = await editPhoto(originalImage, prompt);
+      const resultUrl = await editPhoto(originalImage, finalPrompt);
       setGeneratedImage(resultUrl);
       
       const newRecord: GenerationResult = {
         id: Date.now().toString(),
         originalUrl: originalImage,
         generatedUrl: resultUrl,
-        prompt: prompt || '',
+        prompt: prompt || '', // Store original prompt (without lighting) in history
         timestamp: Date.now(),
       };
       setHistory(prev => [newRecord, ...prev]);
@@ -56,6 +78,7 @@ const App: React.FC = () => {
     setOriginalImage(null);
     setGeneratedImage(null);
     setPrompt('');
+    setSelectedLighting(null);
     setStatus(AppStatus.IDLE);
     setError(null);
   };
@@ -123,7 +146,9 @@ const App: React.FC = () => {
             <div className="lg:col-span-4 order-1 lg:order-2 z-10">
               <ControlPanel 
                 prompt={prompt} 
-                setPrompt={setPrompt} 
+                setPrompt={setPrompt}
+                selectedLighting={selectedLighting}
+                setSelectedLighting={setSelectedLighting}
                 onGenerate={handleGenerate} 
                 isLoading={status === AppStatus.GENERATING}
                 onReset={resetAll}

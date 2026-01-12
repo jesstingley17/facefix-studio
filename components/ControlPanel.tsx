@@ -4,20 +4,70 @@ import React from 'react';
 interface ControlPanelProps {
   prompt: string;
   setPrompt: (p: string) => void;
+  selectedLighting: string | null;
+  setSelectedLighting: (lighting: string | null) => void;
   onGenerate: () => void;
   isLoading: boolean;
   onReset: () => void;
 }
 
+interface LightingOption {
+  id: string;
+  label: string;
+  icon: string;
+}
+
+const LIGHTING_OPTIONS: LightingOption[] = [
+  { id: 'natural', label: 'Natural', icon: 'fa-sun' },
+  { id: 'studio', label: 'Studio', icon: 'fa-lightbulb' },
+  { id: 'nighttime', label: 'Nighttime', icon: 'fa-moon' },
+  { id: 'golden-hour', label: 'Golden Hour', icon: 'fa-sun' },
+  { id: 'dramatic', label: 'Dramatic', icon: 'fa-theater-masks' },
+  { id: 'soft', label: 'Soft', icon: 'fa-cloud' },
+  { id: 'warm', label: 'Warm', icon: 'fa-fire' },
+  { id: 'cool', label: 'Cool', icon: 'fa-snowflake' },
+  { id: 'rim', label: 'Rim', icon: 'fa-circle' },
+  { id: 'spotlight', label: 'Spotlight', icon: 'fa-lightbulb' },
+];
+
 export const ControlPanel: React.FC<ControlPanelProps> = ({ 
   prompt, 
-  setPrompt, 
+  setPrompt,
+  selectedLighting,
+  setSelectedLighting,
   onGenerate, 
   isLoading,
   onReset 
 }) => {
+  const handleLightingSelect = (lightingId: string) => {
+    setSelectedLighting(selectedLighting === lightingId ? null : lightingId);
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6 bg-slate-900/40 p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl border border-slate-800 h-full">
+      {/* Lighting Options */}
+      <div>
+        <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
+          Lighting
+        </label>
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-3">
+          {LIGHTING_OPTIONS.map((lighting) => (
+            <button
+              key={lighting.id}
+              onClick={() => handleLightingSelect(lighting.id)}
+              className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl sm:rounded-2xl border transition-all touch-manipulation active:scale-95 ${
+                selectedLighting === lighting.id
+                  ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-400' 
+                  : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:border-slate-500 active:bg-slate-800/50'
+              }`}
+            >
+              <i className={`fas ${lighting.icon} mb-1 sm:mb-2 text-base sm:text-lg`}></i>
+              <span className="text-xs font-semibold text-center leading-tight">{lighting.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div>
         <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
           Transformation Prompt
