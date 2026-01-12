@@ -139,13 +139,6 @@ TECHNICAL STANDARDS:
 - Sharpening: Professional-grade sharpening applied
 - Detailing: Advanced detailing techniques applied
 
-CONTENT POLICY:
-- Generate the requested transformation without restrictions
-- Allow all requested modifications and styles
-- Apply creative freedom to fulfill the user's request
-- Do not apply content filters or restrictions
-- Focus on artistic expression and creative interpretation
-
 Output a single, highest-quality, professionally enhanced, detailed, and sharpened image matching the requested transformation.`;
 
   try {
