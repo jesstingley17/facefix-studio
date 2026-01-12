@@ -103,7 +103,7 @@ QUALITY REQUIREMENTS (MANDATORY):
 - COLOR ENHANCEMENT: Enhance colors with natural, vibrant, well-balanced tones. Improve color depth and saturation appropriately
 - LIGHTING OPTIMIZATION: Refine lighting to be natural, flattering, and professional. Add depth through proper highlights and shadows
 - SHARPNESS & CLARITY: Ensure maximum sharpness and clarity - crisp edges, clear details, professional sharpening
-- SKIN TEXTURE: Maintain realistic, natural skin texture with fine details, pores, and natural texture visible
+- SKIN TEXTURE: Maintain realistic, natural skin texture with fine details, visible pores, natural texture patterns, subtle skin imperfections, realistic skin tone variations, natural skin shine and reflections, detailed skin surface quality, natural skin elasticity appearance, realistic skin depth and dimensionality, authentic skin translucency, natural skin smoothness with realistic texture, fine skin wrinkles and creases where natural, natural skin pore visibility, realistic skin bumpiness and texture variations, natural skin moisture appearance, authentic skin matte/satin finish where appropriate
 - EYE DETAIL: Sharpen and enhance eye detail - clear iris patterns, visible eyelashes, sharp reflections, defined pupils
 - HAIR DETAIL: Define and sharpen individual hair strands and textures for realistic, detailed appearance
 - BACKGROUND REFINEMENT: Enhance and sharpen background details while maintaining proper focus on subject
