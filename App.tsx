@@ -183,7 +183,7 @@ const App: React.FC = () => {
             <div className="lg:col-span-8 relative group order-2 lg:order-1">
               <div className="relative">
                 <ResultCard 
-                  original={originalImage} 
+                  original={originalImage || ''} 
                   generated={generatedImage || ''} 
                   isLoading={status === AppStatus.GENERATING} 
                 />
