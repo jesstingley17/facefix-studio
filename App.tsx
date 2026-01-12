@@ -63,7 +63,7 @@ const App: React.FC = () => {
         'swimwear': 'swimwear, beachwear',
         'athletic': 'athletic wear, sportswear',
         'elegant': 'elegant dress, sophisticated clothing',
-        'lingerie': 'delicate undergarments, elegant intimate wear, sophisticated intimate apparel',
+        'lingerie': 'wearing elegant silk and lace, delicate fabrics, sophisticated fine textiles, intricate details',
         'streetwear': 'streetwear, urban style',
         'vintage': 'vintage clothing, retro style',
         'business': 'business attire, professional clothing',
