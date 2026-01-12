@@ -13,6 +13,8 @@ const App: React.FC = () => {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [selectedLighting, setSelectedLighting] = useState<string | null>(null);
+  const [selectedClothing, setSelectedClothing] = useState<string | null>(null);
+  const [selectedPose, setSelectedPose] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<GenerationResult[]>([]);
 
@@ -33,8 +35,10 @@ const App: React.FC = () => {
     setStatus(AppStatus.GENERATING);
     setError(null);
 
-    // Combine user prompt with selected lighting
+    // Combine user prompt with selected options (lighting, clothing, pose)
     let finalPrompt = prompt.trim();
+    const promptParts: string[] = [];
+    
     if (selectedLighting) {
       const lightingPrompts: Record<string, string> = {
         'natural': 'natural daylight lighting',
@@ -48,10 +52,50 @@ const App: React.FC = () => {
         'rim': 'rim lighting, edge lighting',
         'spotlight': 'spotlight, dramatic focused lighting',
       };
-      const lightingPrompt = lightingPrompts[selectedLighting] || '';
-      if (lightingPrompt) {
-        finalPrompt = `${finalPrompt}, ${lightingPrompt}`;
-      }
+      const lightingPrompt = lightingPrompts[selectedLighting];
+      if (lightingPrompt) promptParts.push(lightingPrompt);
+    }
+
+    if (selectedClothing) {
+      const clothingPrompts: Record<string, string> = {
+        'casual': 'casual clothing, relaxed style',
+        'formal': 'formal attire, elegant clothing',
+        'swimwear': 'swimwear, beachwear',
+        'athletic': 'athletic wear, sportswear',
+        'elegant': 'elegant dress, sophisticated clothing',
+        'streetwear': 'streetwear, urban style',
+        'vintage': 'vintage clothing, retro style',
+        'business': 'business attire, professional clothing',
+        'evening': 'evening wear, glamorous dress',
+        'minimal': 'minimal clothing, simple style',
+        'none': 'no clothing, nude',
+        'custom': 'custom clothing style',
+      };
+      const clothingPrompt = clothingPrompts[selectedClothing];
+      if (clothingPrompt) promptParts.push(clothingPrompt);
+    }
+
+    if (selectedPose) {
+      const posePrompts: Record<string, string> = {
+        'standing': 'standing pose, full body',
+        'sitting': 'sitting pose, relaxed position',
+        'portrait': 'portrait pose, close-up',
+        'dynamic': 'dynamic pose, movement',
+        'elegant': 'elegant pose, graceful stance',
+        'casual': 'casual pose, natural stance',
+        'profile': 'profile view, side angle',
+        'front': 'frontal view, facing camera',
+        'three-quarter': 'three-quarter view',
+        'action': 'action pose, energetic',
+        'relaxed': 'relaxed pose, comfortable',
+        'power': 'power pose, confident stance',
+      };
+      const posePrompt = posePrompts[selectedPose];
+      if (posePrompt) promptParts.push(posePrompt);
+    }
+
+    if (promptParts.length > 0) {
+      finalPrompt = finalPrompt ? `${finalPrompt}, ${promptParts.join(', ')}` : promptParts.join(', ');
     }
 
     try {
@@ -79,6 +123,8 @@ const App: React.FC = () => {
     setGeneratedImage(null);
     setPrompt('');
     setSelectedLighting(null);
+    setSelectedClothing(null);
+    setSelectedPose(null);
     setStatus(AppStatus.IDLE);
     setError(null);
   };
@@ -149,6 +195,10 @@ const App: React.FC = () => {
                 setPrompt={setPrompt}
                 selectedLighting={selectedLighting}
                 setSelectedLighting={setSelectedLighting}
+                selectedClothing={selectedClothing}
+                setSelectedClothing={setSelectedClothing}
+                selectedPose={selectedPose}
+                setSelectedPose={setSelectedPose}
                 onGenerate={handleGenerate} 
                 isLoading={status === AppStatus.GENERATING}
                 onReset={resetAll}

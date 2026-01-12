@@ -6,18 +6,22 @@ interface ControlPanelProps {
   setPrompt: (p: string) => void;
   selectedLighting: string | null;
   setSelectedLighting: (lighting: string | null) => void;
+  selectedClothing: string | null;
+  setSelectedClothing: (clothing: string | null) => void;
+  selectedPose: string | null;
+  setSelectedPose: (pose: string | null) => void;
   onGenerate: () => void;
   isLoading: boolean;
   onReset: () => void;
 }
 
-interface LightingOption {
+interface Option {
   id: string;
   label: string;
   icon: string;
 }
 
-const LIGHTING_OPTIONS: LightingOption[] = [
+const LIGHTING_OPTIONS: Option[] = [
   { id: 'natural', label: 'Natural', icon: 'fa-sun' },
   { id: 'studio', label: 'Studio', icon: 'fa-lightbulb' },
   { id: 'nighttime', label: 'Nighttime', icon: 'fa-moon' },
@@ -30,17 +34,59 @@ const LIGHTING_OPTIONS: LightingOption[] = [
   { id: 'spotlight', label: 'Spotlight', icon: 'fa-lightbulb' },
 ];
 
+const CLOTHING_OPTIONS: Option[] = [
+  { id: 'casual', label: 'Casual', icon: 'fa-tshirt' },
+  { id: 'formal', label: 'Formal', icon: 'fa-user-tie' },
+  { id: 'swimwear', label: 'Swimwear', icon: 'fa-swimming-pool' },
+  { id: 'athletic', label: 'Athletic', icon: 'fa-dumbbell' },
+  { id: 'elegant', label: 'Elegant', icon: 'fa-gem' },
+  { id: 'streetwear', label: 'Streetwear', icon: 'fa-store' },
+  { id: 'vintage', label: 'Vintage', icon: 'fa-clock-rotate-left' },
+  { id: 'business', label: 'Business', icon: 'fa-briefcase' },
+  { id: 'evening', label: 'Evening', icon: 'fa-moon' },
+  { id: 'minimal', label: 'Minimal', icon: 'fa-minus' },
+  { id: 'none', label: 'None', icon: 'fa-ban' },
+  { id: 'custom', label: 'Custom', icon: 'fa-palette' },
+];
+
+const POSE_OPTIONS: Option[] = [
+  { id: 'standing', label: 'Standing', icon: 'fa-user' },
+  { id: 'sitting', label: 'Sitting', icon: 'fa-chair' },
+  { id: 'portrait', label: 'Portrait', icon: 'fa-camera' },
+  { id: 'dynamic', label: 'Dynamic', icon: 'fa-running' },
+  { id: 'elegant', label: 'Elegant', icon: 'fa-sparkles' },
+  { id: 'casual', label: 'Casual', icon: 'fa-smile' },
+  { id: 'profile', label: 'Profile', icon: 'fa-user-circle' },
+  { id: 'front', label: 'Front', icon: 'fa-user' },
+  { id: 'three-quarter', label: '3/4 View', icon: 'fa-user-astronaut' },
+  { id: 'action', label: 'Action', icon: 'fa-bolt' },
+  { id: 'relaxed', label: 'Relaxed', icon: 'fa-couch' },
+  { id: 'power', label: 'Power', icon: 'fa-hand-fist' },
+];
+
 export const ControlPanel: React.FC<ControlPanelProps> = ({ 
   prompt, 
   setPrompt,
   selectedLighting,
   setSelectedLighting,
+  selectedClothing,
+  setSelectedClothing,
+  selectedPose,
+  setSelectedPose,
   onGenerate, 
   isLoading,
   onReset 
 }) => {
   const handleLightingSelect = (lightingId: string) => {
     setSelectedLighting(selectedLighting === lightingId ? null : lightingId);
+  };
+
+  const handleClothingSelect = (clothingId: string) => {
+    setSelectedClothing(selectedClothing === clothingId ? null : clothingId);
+  };
+
+  const handlePoseSelect = (poseId: string) => {
+    setSelectedPose(selectedPose === poseId ? null : poseId);
   };
 
   return (
@@ -63,6 +109,52 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             >
               <i className={`fas ${lighting.icon} mb-1 sm:mb-2 text-base sm:text-lg`}></i>
               <span className="text-xs font-semibold text-center leading-tight">{lighting.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Clothing Options */}
+      <div>
+        <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
+          Clothing
+        </label>
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
+          {CLOTHING_OPTIONS.map((clothing) => (
+            <button
+              key={clothing.id}
+              onClick={() => handleClothingSelect(clothing.id)}
+              className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl sm:rounded-2xl border transition-all touch-manipulation active:scale-95 ${
+                selectedClothing === clothing.id
+                  ? 'bg-purple-500/10 border-purple-500/50 text-purple-400' 
+                  : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:border-slate-500 active:bg-slate-800/50'
+              }`}
+            >
+              <i className={`fas ${clothing.icon} mb-1 sm:mb-2 text-base sm:text-lg`}></i>
+              <span className="text-xs font-semibold text-center leading-tight">{clothing.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Pose Options */}
+      <div>
+        <label className="block text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3 ml-1 uppercase tracking-wider">
+          Pose
+        </label>
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
+          {POSE_OPTIONS.map((pose) => (
+            <button
+              key={pose.id}
+              onClick={() => handlePoseSelect(pose.id)}
+              className={`flex flex-col items-center justify-center p-2 sm:p-3 rounded-xl sm:rounded-2xl border transition-all touch-manipulation active:scale-95 ${
+                selectedPose === pose.id
+                  ? 'bg-pink-500/10 border-pink-500/50 text-pink-400' 
+                  : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:border-slate-500 active:bg-slate-800/50'
+              }`}
+            >
+              <i className={`fas ${pose.icon} mb-1 sm:mb-2 text-base sm:text-lg`}></i>
+              <span className="text-xs font-semibold text-center leading-tight">{pose.label}</span>
             </button>
           ))}
         </div>
